@@ -7,6 +7,7 @@ import valter.gabriel.Easy.Manager.domain.Employee;
 import valter.gabriel.Easy.Manager.domain.Manager;
 import valter.gabriel.Easy.Manager.domain.dto.req.ReqManager;
 import valter.gabriel.Easy.Manager.domain.dto.req.ReqManagerEmployee;
+import valter.gabriel.Easy.Manager.handle.patters.EmailValidator;
 import valter.gabriel.Easy.Manager.repo.EmployeeRepo;
 import valter.gabriel.Easy.Manager.repo.ManagerRepo;
 
@@ -27,6 +28,8 @@ public class ManagerService {
         Manager manager = mapper.map(reqManager, Manager.class);
         managerRepo.save(manager);
         return manager;
+
+
     }
 
     public Manager createNewEmployeeByManager(ReqManagerEmployee reqEmployee) {
@@ -45,7 +48,6 @@ public class ManagerService {
 
         managerEmployee.setEmployees(updateEmployeeList(managerFounded, reqEmployee));
 
-
         managerRepo.save(managerEmployee);
         return managerEmployee;
     }
@@ -63,5 +65,4 @@ public class ManagerService {
         return newEmployees;
 
     }
-
 }
