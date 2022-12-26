@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Manager {
+public class Manager implements Serializable {
 
     @Id
     private Long cnpj;
@@ -29,16 +30,4 @@ public class Manager {
     @OneToMany(targetEntity = Employee.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "employer_manager_fk", referencedColumnName = "cnpj")
     private List<Employee> employees;
-
-    @OneToMany(targetEntity = Jobs.class, cascade = CascadeType.ALL)
-    @JoinColumn(name = "job_from_manager_fk", referencedColumnName = "cnpj")
-    private List<Jobs> jobs;
-
-
-
-
-
-
-
-
 }
