@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import valter.gabriel.Easy.Manager.domain.Manager;
-import valter.gabriel.Easy.Manager.domain.dto.req.JobsReq;
+import valter.gabriel.Easy.Manager.domain.dto.req.OrderJob;
 import valter.gabriel.Easy.Manager.domain.dto.req.ReqManager;
 import valter.gabriel.Easy.Manager.domain.dto.req.ReqManagerEmployee;
 import valter.gabriel.Easy.Manager.domain.dto.res.ResCreatedJobs;
@@ -33,8 +33,8 @@ public class ManagerController {
     }
 
     @PatchMapping("manager/create-job")
-    public ResponseEntity<ResCreatedJobs> createNewJob(@RequestBody JobsReq jobsReq) {
-        ResCreatedJobs resCreatedJobs = managerService.createNewJob(jobsReq);
+    public ResponseEntity<ResCreatedJobs> createNewJob(@RequestBody OrderJob orderJob) {
+        ResCreatedJobs resCreatedJobs = managerService.createNewJob(orderJob);
         return new ResponseEntity<>(resCreatedJobs, HttpStatus.CREATED);
     }
 
