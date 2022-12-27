@@ -10,12 +10,7 @@ public class EmailValidator extends FieldValidator {
     @Override
     public Boolean validation(String field) {
         Matcher matcher = EMAIL_PATTERN.matcher(field);
-        boolean matches = matcher.matches();
-        if (matches){
-            return true;
-        }else{
-            return false;
-        }
+        return matcher.matches();
     }
 
 
