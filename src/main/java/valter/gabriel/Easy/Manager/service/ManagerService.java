@@ -13,7 +13,8 @@ import valter.gabriel.Easy.Manager.domain.dto.res.ResManagerToJobCreated;
 import valter.gabriel.Easy.Manager.handle.UpdateList;
 import valter.gabriel.Easy.Manager.repo.ManagerRepo;
 
-import java.util.ArrayList;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,13 +27,14 @@ public class ManagerService {
         this.managerRepo = managerRepo;
     }
 
-    public Manager createNewManager(ReqManager reqManager) {
+    public void createNewManager(ReqManager reqManager) {
         ModelMapper mapper = new ModelMapper();
         Manager manager = mapper.map(reqManager, Manager.class);
+
+        LocalDate localDateTime = LocalDate.now();
+        manager.setCreationDate(localDateTime);
+
         managerRepo.save(manager);
-        return manager;
-
-
     }
 
     /**
@@ -41,24 +43,19 @@ public class ManagerService {
      * @return manager object with the list of employers updated
      */
     public Manager createNewEmployeeByManager(ReqManagerEmployee reqManagerEmployee) {
-        ModelMapper mapper = new ModelMapper();
-        Manager managerEmployee = mapper.map(reqManagerEmployee, Manager.class);
-        Manager managerFounded = managerRepo.findById(managerEmployee.getCnpj()).get();
+        Manager managerFounded = managerRepo.findById(reqManagerEmployee.getCnpj()).get();
 
-        managerEmployee.setMPhone(managerFounded.getMPhone());
-        managerEmployee.setGender(managerFounded.getGender());
-        managerEmployee.setBornDay(managerFounded.getBornDay());
-        managerEmployee.setMEmail(managerFounded.getMEmail());
-        managerEmployee.setMCompany(managerFounded.getMCompany());
-        managerEmployee.setIsActive(managerFounded.getIsActive());
-        managerEmployee.setMName(managerFounded.getMName());
-
+        LocalDate localDateTime = LocalDate.now();
+        reqManagerEmployee.getEmployees().forEach(employee -> {
+            employee.setHireDate(localDateTime);
+        });
 
         List<Employee> employeeList = new UpdateList<Employee>().updateList(managerFounded.getEmployees(), reqManagerEmployee.getEmployees());
-        managerEmployee.setEmployees(employeeList);
 
-        managerRepo.save(managerEmployee);
-        return managerEmployee;
+        managerFounded.setEmployees(employeeList);
+
+        managerRepo.save(managerFounded);
+        return managerFounded;
     }
 
     /**
@@ -75,6 +72,11 @@ public class ManagerService {
         if (!foundManager.isPresent()) {
          return null;
         }
+
+        LocalDateTime localDateTime = LocalDateTime.now();
+        orderJob.getJobs().forEach(job -> {
+            job.setCreationDay(localDateTime);
+        });
 
         /**
          * finding in the employers list from the manager specific employer passed as parameter on json
@@ -104,4 +106,9 @@ public class ManagerService {
 
         return resCreatedJobs;
     }
+
+    public List<Employee> findAllEmployeeByManager(Long cnpj){
+        return managerRepo.findAllEmployeeByManager(cnpj);
+    }
+
 }

@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -26,6 +27,9 @@ public class Manager implements Serializable {
     private Integer isActive;
     private Gender gender;
     private LocalDate bornDay;
+
+    private LocalDate creationDate;
+    private String password;
 
     @OneToMany(targetEntity = Employee.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "employer_manager_fk", referencedColumnName = "cnpj")

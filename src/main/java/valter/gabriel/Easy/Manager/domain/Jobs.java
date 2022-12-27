@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "jobs_tbl")
@@ -20,5 +21,6 @@ public class Jobs implements Serializable {
     private String name;
     private String description;
     private String urlImage;
+    private LocalDateTime creationDay;
 
 }

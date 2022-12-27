@@ -19,4 +19,6 @@ public class ReqManager {
     private Integer isActive;
     private Gender gender;
     private LocalDate bornDay;
+    private LocalDate creationDate;
+    private String password;
 }
