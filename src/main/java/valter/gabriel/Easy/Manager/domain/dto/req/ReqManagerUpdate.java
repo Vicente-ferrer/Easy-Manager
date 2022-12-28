@@ -1,4 +1,4 @@
-package valter.gabriel.Easy.Manager.domain.dto.res;
+package valter.gabriel.Easy.Manager.domain.dto.req;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,14 +10,10 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class ResManagerCreated {
-    private Long cnpj;
+public class ReqManagerUpdate {
     private String mName;
     private String mEmail;
     private String mCompany;
     private String mPhone;
-    private Integer isActive;
-    private Gender gender;
-    private LocalDate bornDay;
     private String password;
 }

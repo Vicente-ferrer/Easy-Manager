@@ -10,6 +10,7 @@ import valter.gabriel.Easy.Manager.domain.Manager;
 import valter.gabriel.Easy.Manager.domain.dto.req.OrderJob;
 import valter.gabriel.Easy.Manager.domain.dto.req.ReqManager;
 import valter.gabriel.Easy.Manager.domain.dto.req.ReqManagerEmployee;
+import valter.gabriel.Easy.Manager.domain.dto.req.ReqManagerUpdate;
 import valter.gabriel.Easy.Manager.domain.dto.res.ResCreatedJobs;
 import valter.gabriel.Easy.Manager.domain.dto.res.ResManager;
 import valter.gabriel.Easy.Manager.domain.dto.res.ResManagerCreated;
@@ -49,9 +50,23 @@ public class ManagerController {
         return new ResponseEntity<>(resManager, HttpStatus.CREATED);
     }
 
-    @GetMapping("/find-all-by-manager/{cnpj}")
+    @GetMapping("/find-all-employers-by-manager/{cnpj}")
     public ResponseEntity<List<Employee>> findAllEmployeeByManager(@PathVariable("cnpj") Long cnpj) {
         List<Employee> allEmployeeByManager = managerService.findAllEmployeeByManager(cnpj);
         return new ResponseEntity<>(allEmployeeByManager, HttpStatus.OK);
+    }
+
+    @GetMapping("/find-manager-by-cnpj/{cnpj}")
+    public ResponseEntity<Manager> findManagerById(@PathVariable("cnpj") Long cnpj) {
+        Manager manager = managerService.findManagerById(cnpj);
+        return new ResponseEntity<>(manager, HttpStatus.OK);
+    }
+
+    @PutMapping("manager/update-field-from/{cnpj}")
+    public ResponseEntity<ResManager> updateManagerFieldsWithoutListEmployers(@PathVariable("cnpj") Long cnpj, @RequestBody ReqManagerUpdate reqManagerUpdate) {
+        ModelMapper mapper = new ModelMapper();
+        Manager manager = managerService.updateManagerFieldsWithoutListEmployers(cnpj, reqManagerUpdate);
+        ResManager resManager = mapper.map(manager, ResManager.class);
+        return new ResponseEntity<>(resManager, HttpStatus.OK);
     }
 }

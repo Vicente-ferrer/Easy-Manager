@@ -13,6 +13,7 @@ import valter.gabriel.Easy.Manager.domain.dto.res.ResManagerToJobCreated;
 import valter.gabriel.Easy.Manager.handle.UpdateList;
 import valter.gabriel.Easy.Manager.repo.ManagerRepo;
 
+import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -39,6 +40,7 @@ public class ManagerService {
 
     /**
      * Method to create a new employer to specific manager
+     *
      * @param reqManagerEmployee manager object that has to be passed
      * @return manager object with the list of employers updated
      */
@@ -60,6 +62,7 @@ public class ManagerService {
 
     /**
      * Method to create a job for specific manager and employer
+     *
      * @param orderJob object that receive cnpj of manager and cpf of employer that has to do the work
      * @return object resCreatedJobs that represents the manager of job and the employer that jobs has associated
      */
@@ -70,7 +73,7 @@ public class ManagerService {
         Optional<Manager> foundManager = managerRepo.findById(orderJob.getCnpj());
 
         if (!foundManager.isPresent()) {
-         return null;
+            return null;
         }
 
         LocalDateTime localDateTime = LocalDateTime.now();
@@ -107,8 +110,31 @@ public class ManagerService {
         return resCreatedJobs;
     }
 
-    public List<Employee> findAllEmployeeByManager(Long cnpj){
+    public List<Employee> findAllEmployeeByManager(Long cnpj) {
         return managerRepo.findAllEmployeeByManager(cnpj);
     }
 
+    public Manager updateManagerFieldsWithoutListEmployers(Long cnpj, ReqManagerUpdate reqManagerUpdate) {
+        Optional<Manager> managerFounded = managerRepo.findById(cnpj);
+
+        if (!managerFounded.isPresent()) {
+            return null;
+        }
+
+        Manager myManager = managerFounded.get();
+
+        myManager.setMName(reqManagerUpdate.getMName());
+        myManager.setMEmail(reqManagerUpdate.getMEmail());
+        myManager.setMPhone(reqManagerUpdate.getMPhone());
+        myManager.setPassword(reqManagerUpdate.getPassword());
+        myManager.setMCompany(reqManagerUpdate.getMCompany());
+
+        managerRepo.save(myManager);
+        return myManager;
+    }
+
+    public Manager findManagerById(Long cnpj){
+        Optional<Manager> manager = managerRepo.findById(cnpj);
+        return manager.orElse(null);
+    }
 }

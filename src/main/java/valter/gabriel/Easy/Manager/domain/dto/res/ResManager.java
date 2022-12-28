@@ -23,4 +23,5 @@ public class ResManager {
     private Gender gender;
     private LocalDate bornDay;
     private List<Employee> employees;
+    private String password;
 }
