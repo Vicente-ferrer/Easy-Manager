@@ -11,6 +11,8 @@ import valter.gabriel.Easy.Manager.domain.dto.req.*;
 import valter.gabriel.Easy.Manager.domain.dto.res.ResCreatedJobs;
 import valter.gabriel.Easy.Manager.domain.dto.res.ResManager;
 import valter.gabriel.Easy.Manager.domain.dto.res.ResManagerCreated;
+import valter.gabriel.Easy.Manager.service.EmployeeService;
+import valter.gabriel.Easy.Manager.service.JobService;
 import valter.gabriel.Easy.Manager.service.ManagerService;
 
 import java.util.List;
@@ -19,6 +21,7 @@ import java.util.List;
 @RequestMapping("/")
 public class ManagerController {
     private final ManagerService managerService;
+
 
     @Autowired
     public ManagerController(ManagerService managerService) {
@@ -31,26 +34,6 @@ public class ManagerController {
         ModelMapper mapper = new ModelMapper();
         ResManagerCreated resManager = mapper.map(reqManager, ResManagerCreated.class);
         return new ResponseEntity<>(resManager, HttpStatus.CREATED);
-    }
-
-    @PatchMapping("manager/create-job")
-    public ResponseEntity<ResCreatedJobs> createNewJob(@RequestBody OrderJob orderJob) {
-        ResCreatedJobs resCreatedJobs = managerService.createNewJob(orderJob);
-        return new ResponseEntity<>(resCreatedJobs, HttpStatus.CREATED);
-    }
-
-    @PatchMapping("manager/create-employee")
-    public ResponseEntity<ResManager> createNewEmployer(@RequestBody ReqManagerEmployee reqManagerEmployee) {
-        ModelMapper mapper = new ModelMapper();
-        Manager manager = managerService.createNewEmployeeByManager(reqManagerEmployee);
-        ResManager resManager = mapper.map(manager, ResManager.class);
-        return new ResponseEntity<>(resManager, HttpStatus.CREATED);
-    }
-
-    @GetMapping("/find-all-employers-by-manager/{cnpj}")
-    public ResponseEntity<List<Employee>> findAllEmployeeByManager(@PathVariable("cnpj") Long cnpj) {
-        List<Employee> allEmployeeByManager = managerService.findAllEmployeeByManager(cnpj);
-        return new ResponseEntity<>(allEmployeeByManager, HttpStatus.OK);
     }
 
     @GetMapping("/find-manager-by-cnpj/{cnpj}")
@@ -67,19 +50,11 @@ public class ManagerController {
         return new ResponseEntity<>(resManager, HttpStatus.OK);
     }
 
-    @PutMapping("manager/update-employer-from/{cnpj}/where-id/{cpf}")
-    public ResponseEntity<ResManager> updateEmployer(@PathVariable("cnpj") Long cnpj, @PathVariable("cpf") Long cpf, @RequestBody ReqManagerUpdateListEmployers reqManagerUpdateListEmployers) {
-        ModelMapper mapper = new ModelMapper();
-        Manager manager = managerService.updateEmployerByManager(cnpj, cpf, reqManagerUpdateListEmployers);
-        ResManager resManager = mapper.map(manager, ResManager.class);
-        return new ResponseEntity<>(resManager, HttpStatus.OK);
+    @DeleteMapping("manager/delete/{cnpj}")
+    public ResponseEntity<String> deleteManagerByCnpj(@PathVariable("cnpj") Long cnpj){
+        Manager manager = managerService.deleteManagerById(cnpj);
+        String msg = "Usuário " + manager.getMName() + " deletado com sucesso: CNPJ -> " + manager.getCnpj();
+        return new ResponseEntity<>(msg, HttpStatus.NO_CONTENT);
     }
 
-    @PutMapping("manager/update-job-/{id}/where-employer/{cpf}/manager/{cnpj}")
-    public ResponseEntity<ResManager> updateEmployer(@PathVariable("id") Long id, @PathVariable("cpf") Long cpf, @PathVariable("cnpj") Long cnpj, @RequestBody ReqManagerUpdateListJobs reqManagerUpdateListJobs) {
-        ModelMapper mapper = new ModelMapper();
-        Manager manager = managerService.updateJobsListByManager(cnpj, cpf,id, reqManagerUpdateListJobs);
-        ResManager resManager = mapper.map(manager, ResManager.class);
-        return new ResponseEntity<>(resManager, HttpStatus.OK);
-    }
 }
