@@ -7,10 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import valter.gabriel.Easy.Manager.domain.Employee;
 import valter.gabriel.Easy.Manager.domain.Manager;
-import valter.gabriel.Easy.Manager.domain.dto.req.OrderJob;
-import valter.gabriel.Easy.Manager.domain.dto.req.ReqManager;
-import valter.gabriel.Easy.Manager.domain.dto.req.ReqManagerEmployee;
-import valter.gabriel.Easy.Manager.domain.dto.req.ReqManagerUpdate;
+import valter.gabriel.Easy.Manager.domain.dto.req.*;
 import valter.gabriel.Easy.Manager.domain.dto.res.ResCreatedJobs;
 import valter.gabriel.Easy.Manager.domain.dto.res.ResManager;
 import valter.gabriel.Easy.Manager.domain.dto.res.ResManagerCreated;
@@ -65,7 +62,23 @@ public class ManagerController {
     @PutMapping("manager/update-field-from/{cnpj}")
     public ResponseEntity<ResManager> updateManagerFieldsWithoutListEmployers(@PathVariable("cnpj") Long cnpj, @RequestBody ReqManagerUpdate reqManagerUpdate) {
         ModelMapper mapper = new ModelMapper();
-        Manager manager = managerService.updateManagerFieldsWithoutListEmployers(cnpj, reqManagerUpdate);
+        Manager manager = managerService.updateManagerById(cnpj, reqManagerUpdate);
+        ResManager resManager = mapper.map(manager, ResManager.class);
+        return new ResponseEntity<>(resManager, HttpStatus.OK);
+    }
+
+    @PutMapping("manager/update-employer-from/{cnpj}/where-id/{cpf}")
+    public ResponseEntity<ResManager> updateEmployer(@PathVariable("cnpj") Long cnpj, @PathVariable("cpf") Long cpf, @RequestBody ReqManagerUpdateListEmployers reqManagerUpdateListEmployers) {
+        ModelMapper mapper = new ModelMapper();
+        Manager manager = managerService.updateEmployerByManager(cnpj, cpf, reqManagerUpdateListEmployers);
+        ResManager resManager = mapper.map(manager, ResManager.class);
+        return new ResponseEntity<>(resManager, HttpStatus.OK);
+    }
+
+    @PutMapping("manager/update-job-/{id}/where-employer/{cpf}/manager/{cnpj}")
+    public ResponseEntity<ResManager> updateEmployer(@PathVariable("id") Long id, @PathVariable("cpf") Long cpf, @PathVariable("cnpj") Long cnpj, @RequestBody ReqManagerUpdateListJobs reqManagerUpdateListJobs) {
+        ModelMapper mapper = new ModelMapper();
+        Manager manager = managerService.updateJobsListByManager(cnpj, cpf,id, reqManagerUpdateListJobs);
         ResManager resManager = mapper.map(manager, ResManager.class);
         return new ResponseEntity<>(resManager, HttpStatus.OK);
     }
