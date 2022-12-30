@@ -84,12 +84,11 @@ public class ManagerService {
         return manager.orElse(null);
     }
 
-    public Manager deleteManagerById(Long cnpj) {
+    public void deleteManagerById(Long cnpj) {
         Optional<Manager> myManager = managerRepo.findById(cnpj);
         if (!myManager.isPresent()) {
-            return null;
+            return;
         }
         managerRepo.delete(myManager.get());
-        return myManager.get();
     }
 }

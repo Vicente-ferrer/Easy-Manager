@@ -1,6 +1,7 @@
 package valter.gabriel.Easy.Manager.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,5 +23,10 @@ public class Jobs implements Serializable {
     private String description;
     private String urlImage;
     private LocalDateTime creationDay;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(insertable = false, updatable = false)
+    @JsonIgnore
+    private Employee employee;
 
 }

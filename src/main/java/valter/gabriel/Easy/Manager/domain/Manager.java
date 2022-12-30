@@ -32,6 +32,6 @@ public class Manager implements Serializable {
     private String password;
 
     @OneToMany(targetEntity = Employee.class, cascade = CascadeType.ALL)
-    @JoinColumn(name = "employer_manager_fk", referencedColumnName = "cnpj")
+    @JoinColumn(name = "manager_fk", referencedColumnName = "cnpj")
     private List<Employee> employees;
 }

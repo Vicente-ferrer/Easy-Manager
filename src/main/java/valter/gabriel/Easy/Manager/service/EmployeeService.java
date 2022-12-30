@@ -2,11 +2,13 @@ package valter.gabriel.Easy.Manager.service;
 
 import org.springframework.stereotype.Service;
 import valter.gabriel.Easy.Manager.domain.Employee;
+import valter.gabriel.Easy.Manager.domain.Jobs;
 import valter.gabriel.Easy.Manager.domain.Manager;
 import valter.gabriel.Easy.Manager.domain.dto.req.ReqManagerEmployee;
 import valter.gabriel.Easy.Manager.domain.dto.req.ReqManagerUpdateListEmployers;
 import valter.gabriel.Easy.Manager.handle.UpdateList;
 import valter.gabriel.Easy.Manager.repo.EmployeeRepo;
+import valter.gabriel.Easy.Manager.repo.JobRepo;
 import valter.gabriel.Easy.Manager.repo.ManagerRepo;
 
 import java.time.LocalDate;
@@ -18,10 +20,12 @@ public class EmployeeService {
 
     private final ManagerRepo managerRepo;
     private final EmployeeRepo employeeRepo;
+    private final JobRepo jobRepo;
 
-    public EmployeeService(ManagerRepo managerRepo, EmployeeRepo employeeRepo) {
+    public EmployeeService(ManagerRepo managerRepo, EmployeeRepo employeeRepo, JobRepo jobRepo) {
         this.managerRepo = managerRepo;
         this.employeeRepo = employeeRepo;
+        this.jobRepo = jobRepo;
     }
 
     /**
@@ -85,5 +89,18 @@ public class EmployeeService {
 
         managerRepo.save(myManager);
         return myManager;
+    }
+
+    public void deleteEmployeer(Long cnpj, Long cpf){
+        Manager manager = managerRepo.findById(cnpj).orElse(null);
+        Optional<Employee> employee = manager.getEmployees().stream().filter(item -> item.getCpf().equals(cpf)).findFirst();
+        if (!employee.isPresent()){
+            return;
+        }
+        manager.getEmployees().remove(employee.get());
+        managerRepo.save(manager);
+        employeeRepo.delete(employee.get());
+
+
     }
 }

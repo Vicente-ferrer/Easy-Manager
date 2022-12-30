@@ -18,7 +18,7 @@ import valter.gabriel.Easy.Manager.service.ManagerService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/api/v1/")
 public class JobController {
 
     private final JobService jobService;
@@ -30,17 +30,24 @@ public class JobController {
     }
 
 
-    @PatchMapping("manager/create-job")
+    @PatchMapping("job/create")
     public ResponseEntity<ResCreatedJobs> createNewJob(@RequestBody OrderJob orderJob) {
         ResCreatedJobs resCreatedJobs = jobService.createNewJob(orderJob);
         return new ResponseEntity<>(resCreatedJobs, HttpStatus.CREATED);
     }
 
-    @PutMapping("manager/update-job-/{id}/where-employer/{cpf}/manager/{cnpj}")
+    @PutMapping("job/update/{id}/where-employer/{cpf}/from-manager/{cnpj}")
     public ResponseEntity<ResManager> updateJob(@PathVariable("id") Long id, @PathVariable("cpf") Long cpf, @PathVariable("cnpj") Long cnpj, @RequestBody ReqManagerUpdateListJobs reqManagerUpdateListJobs) {
         ModelMapper mapper = new ModelMapper();
         Manager manager = jobService.updateJobsListByManager(cnpj, cpf,id, reqManagerUpdateListJobs);
         ResManager resManager = mapper.map(manager, ResManager.class);
         return new ResponseEntity<>(resManager, HttpStatus.OK);
     }
+
+    @DeleteMapping("job/delete/{id}/from-manager/{cnpj}/from-employee/{cpf}")
+    public ResponseEntity<?> deleteManagerByCnpj(@PathVariable("id")Long id, @PathVariable("cnpj") Long cnpj, @PathVariable("cpf") Long cpf){
+        jobService.deleteJob(cnpj, cpf, id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
 }

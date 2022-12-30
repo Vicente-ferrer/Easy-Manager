@@ -18,7 +18,7 @@ import valter.gabriel.Easy.Manager.service.ManagerService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/api/v1/")
 public class EmployeeController {
 
     private final EmployeeService employeeService;
@@ -32,7 +32,7 @@ public class EmployeeController {
 
     }
 
-    @PatchMapping("manager/create-employee")
+    @PatchMapping("employee/create-employee")
     public ResponseEntity<ResManager> createNewEmployer(@RequestBody ReqManagerEmployee reqManagerEmployee) {
         ModelMapper mapper = new ModelMapper();
         Manager manager = employeeService.createNewEmployeeByManager(reqManagerEmployee);
@@ -40,18 +40,24 @@ public class EmployeeController {
         return new ResponseEntity<>(resManager, HttpStatus.CREATED);
     }
 
-    @GetMapping("/find-all-employers-by-manager/{cnpj}")
+    @GetMapping("employee/find-all-by-manager/{cnpj}")
     public ResponseEntity<List<Employee>> findAllEmployeeByManager(@PathVariable("cnpj") Long cnpj) {
         List<Employee> allEmployeeByManager = employeeService.findAllEmployeeByManager(cnpj);
         return new ResponseEntity<>(allEmployeeByManager, HttpStatus.OK);
     }
 
-    @PutMapping("manager/update-employer-from/{cnpj}/where-id/{cpf}")
+    @PutMapping("employee/update-from/{cnpj}/where-id/{cpf}")
     public ResponseEntity<ResManager> updateEmployer(@PathVariable("cnpj") Long cnpj, @PathVariable("cpf") Long cpf, @RequestBody ReqManagerUpdateListEmployers reqManagerUpdateListEmployers) {
         ModelMapper mapper = new ModelMapper();
         Manager manager = employeeService.updateEmployerByManager(cnpj, cpf, reqManagerUpdateListEmployers);
         ResManager resManager = mapper.map(manager, ResManager.class);
         return new ResponseEntity<>(resManager, HttpStatus.OK);
+    }
+
+    @DeleteMapping("employee/delete/{cpf}/from/{cnpj}")
+    public ResponseEntity<?> deleteManagerByCnpj(@PathVariable("cpf") Long cpf,@PathVariable("cnpj") Long cnpj){
+        employeeService.deleteEmployeer(cnpj, cpf);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 }

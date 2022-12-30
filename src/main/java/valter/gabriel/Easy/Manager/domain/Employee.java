@@ -1,5 +1,6 @@
 package valter.gabriel.Easy.Manager.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,7 +31,7 @@ public class Employee implements Serializable {
     private String password;
 
     @OneToMany(targetEntity = Jobs.class, cascade = CascadeType.ALL)
-    @JoinColumn(name = "employer_todo_fk", referencedColumnName = "cpf")
+
     private List<Jobs> jobs;
 
 

@@ -18,7 +18,7 @@ import valter.gabriel.Easy.Manager.service.ManagerService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/api/v1/")
 public class ManagerController {
     private final ManagerService managerService;
 
@@ -36,13 +36,13 @@ public class ManagerController {
         return new ResponseEntity<>(resManager, HttpStatus.CREATED);
     }
 
-    @GetMapping("/find-manager-by-cnpj/{cnpj}")
+    @GetMapping("manager/find-by-cnpj/{cnpj}")
     public ResponseEntity<Manager> findManagerById(@PathVariable("cnpj") Long cnpj) {
         Manager manager = managerService.findManagerById(cnpj);
         return new ResponseEntity<>(manager, HttpStatus.OK);
     }
 
-    @PutMapping("manager/update-field-from/{cnpj}")
+    @PutMapping("manager/update-fields-from/{cnpj}")
     public ResponseEntity<ResManager> updateManagerFieldsWithoutListEmployers(@PathVariable("cnpj") Long cnpj, @RequestBody ReqManagerUpdate reqManagerUpdate) {
         ModelMapper mapper = new ModelMapper();
         Manager manager = managerService.updateManagerById(cnpj, reqManagerUpdate);
@@ -51,10 +51,11 @@ public class ManagerController {
     }
 
     @DeleteMapping("manager/delete/{cnpj}")
-    public ResponseEntity<String> deleteManagerByCnpj(@PathVariable("cnpj") Long cnpj){
-        Manager manager = managerService.deleteManagerById(cnpj);
-        String msg = "Usuário " + manager.getMName() + " deletado com sucesso: CNPJ -> " + manager.getCnpj();
-        return new ResponseEntity<>(msg, HttpStatus.NO_CONTENT);
+    public ResponseEntity<?> deleteManagerByCnpj(@PathVariable("cnpj") Long cnpj){
+        managerService.deleteManagerById(cnpj);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+
 
 }
