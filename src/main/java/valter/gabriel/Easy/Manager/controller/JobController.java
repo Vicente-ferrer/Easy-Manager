@@ -44,9 +44,9 @@ public class JobController {
         return new ResponseEntity<>(resManager, HttpStatus.OK);
     }
 
-    @DeleteMapping("job/delete/{id}/from-manager/{cnpj}/from-employee/{cpf}")
-    public ResponseEntity<?> deleteManagerByCnpj(@PathVariable("id")Long id, @PathVariable("cnpj") Long cnpj, @PathVariable("cpf") Long cpf){
-        jobService.deleteJob(cnpj, cpf, id);
+    @DeleteMapping("job/delete/{id}")
+    public ResponseEntity<?> deleteManagerByCnpj(@PathVariable("id")Long id){
+        jobService.deleteJob(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

@@ -65,7 +65,6 @@ public class JobService {
             return null;
         }
 
-
         List<Jobs> listJobs = new UpdateList<Jobs>().updateList(employee.get().getJobs(), orderJob.getJobs());
         employee.get().setJobs(listJobs);
 
@@ -122,18 +121,8 @@ public class JobService {
         return myManager;
     }
 
-    public void deleteJob(Long cnpj, Long cpf, Long id){
-        Manager manager = managerRepo.findById(cnpj).orElse(null);
-        Optional<Employee> employee = manager.getEmployees().stream().filter(item -> item.getCpf().equals(cpf)).findFirst();
-        if (!employee.isPresent()){
-            return;
-        }
-        Optional<Jobs> job =  employee.get().getJobs().stream().filter(item -> item.getId().equals(id)).findFirst();
+    public void deleteJob(Long id){
+        jobRepo.deleteById(id);
 
-        if (!job.isPresent()){
-            return;
-        }
-
-        jobRepo.delete(job.get());
     }
 }
