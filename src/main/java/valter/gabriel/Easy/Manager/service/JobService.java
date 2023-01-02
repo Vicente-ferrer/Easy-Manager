@@ -10,12 +10,11 @@ import valter.gabriel.Easy.Manager.domain.dto.req.ReqManagerUpdateListJobs;
 import valter.gabriel.Easy.Manager.domain.dto.res.ResCreatedJobs;
 import valter.gabriel.Easy.Manager.domain.dto.res.ResEmployeeToJobCreated;
 import valter.gabriel.Easy.Manager.domain.dto.res.ResManagerToJobCreated;
-import valter.gabriel.Easy.Manager.handle.UpdateList;
+import valter.gabriel.Easy.Manager.handle.ListHandle;
 import valter.gabriel.Easy.Manager.repo.EmployeeRepo;
 import valter.gabriel.Easy.Manager.repo.JobRepo;
 import valter.gabriel.Easy.Manager.repo.ManagerRepo;
 
-import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -65,7 +64,7 @@ public class JobService {
             return null;
         }
 
-        List<Jobs> listJobs = new UpdateList<Jobs>().updateList(employee.get().getJobs(), orderJob.getJobs());
+        List<Jobs> listJobs = new ListHandle<Jobs>().updateList(employee.get().getJobs(), orderJob.getJobs());
         employee.get().setJobs(listJobs);
 
         managerRepo.save(foundManager.get());

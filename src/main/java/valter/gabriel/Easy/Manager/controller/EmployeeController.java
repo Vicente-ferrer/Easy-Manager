@@ -34,10 +34,8 @@ public class EmployeeController {
 
     @PatchMapping("employee/create-employee")
     public ResponseEntity<ResManager> createNewEmployer(@RequestBody ReqManagerEmployee reqManagerEmployee) {
-        ModelMapper mapper = new ModelMapper();
-        Manager manager = employeeService.createNewEmployeeByManager(reqManagerEmployee);
-        ResManager resManager = mapper.map(manager, ResManager.class);
-        return new ResponseEntity<>(resManager, HttpStatus.CREATED);
+        ResManager newEmployeeByManager = employeeService.createNewEmployeeByManager(reqManagerEmployee);
+        return new ResponseEntity<>(newEmployeeByManager, HttpStatus.CREATED);
     }
 
     @GetMapping("employee/find-all-by-manager/{cnpj}")

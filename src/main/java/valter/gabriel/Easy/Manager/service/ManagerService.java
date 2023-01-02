@@ -4,23 +4,14 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.function.ServerResponse;
-import valter.gabriel.Easy.Manager.domain.Employee;
-import valter.gabriel.Easy.Manager.domain.Jobs;
 import valter.gabriel.Easy.Manager.domain.Manager;
 import valter.gabriel.Easy.Manager.domain.dto.req.*;
 import valter.gabriel.Easy.Manager.domain.dto.res.*;
 import valter.gabriel.Easy.Manager.exception.ApiRequestException;
-import valter.gabriel.Easy.Manager.exception.ManagerException;
-import valter.gabriel.Easy.Manager.handle.UpdateList;
-import valter.gabriel.Easy.Manager.repo.EmployeeRepo;
 import valter.gabriel.Easy.Manager.repo.ManagerRepo;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class ManagerService {
@@ -80,8 +71,7 @@ public class ManagerService {
         managerRepo.save(myManager);
 
         ModelMapper mapper = new ModelMapper();
-        ResManager resManager = mapper.map(myManager, ResManager.class);
-        return resManager;
+        return mapper.map(myManager, ResManager.class);
     }
 
     /**
