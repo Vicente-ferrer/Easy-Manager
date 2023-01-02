@@ -1,6 +1,7 @@
 package valter.gabriel.Easy.Manager.service;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import valter.gabriel.Easy.Manager.domain.Employee;
 import valter.gabriel.Easy.Manager.domain.Jobs;
@@ -9,7 +10,9 @@ import valter.gabriel.Easy.Manager.domain.dto.req.OrderJob;
 import valter.gabriel.Easy.Manager.domain.dto.req.ReqManagerUpdateListJobs;
 import valter.gabriel.Easy.Manager.domain.dto.res.ResCreatedJobs;
 import valter.gabriel.Easy.Manager.domain.dto.res.ResEmployeeToJobCreated;
+import valter.gabriel.Easy.Manager.domain.dto.res.ResManager;
 import valter.gabriel.Easy.Manager.domain.dto.res.ResManagerToJobCreated;
+import valter.gabriel.Easy.Manager.exception.ApiRequestException;
 import valter.gabriel.Easy.Manager.handle.ListHandle;
 import valter.gabriel.Easy.Manager.repo.EmployeeRepo;
 import valter.gabriel.Easy.Manager.repo.JobRepo;
@@ -17,7 +20,6 @@ import valter.gabriel.Easy.Manager.repo.ManagerRepo;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class JobService {
@@ -42,11 +44,7 @@ public class JobService {
         /**
          * Finding the manager to update job list
          */
-        Optional<Manager> foundManager = managerRepo.findById(orderJob.getCnpj());
-
-        if (!foundManager.isPresent()) {
-            return null;
-        }
+        Manager manager = managerRepo.findById(orderJob.getCnpj()).orElseThrow(() -> new ApiRequestException(HttpStatus.NOT_FOUND, "Patrão " + orderJob.getCnpj() + " não encontrado!"));
 
         LocalDateTime localDateTime = LocalDateTime.now();
         orderJob.getJobs().forEach(job -> {
@@ -56,24 +54,24 @@ public class JobService {
         /**
          * finding in the employers list from the manager specific employer passed as parameter on json
          */
-        Optional<Employee> employee = foundManager.get().getEmployees().stream().filter(employer -> employer.getCpf().equals(orderJob.getCpf())).findAny();
+        Employee employee = manager.getEmployees()
+                .stream()
+                .filter(employer -> employer.getCpf().equals(orderJob.getCpf()))
+                .findFirst()
+                .orElseThrow(() -> new ApiRequestException(HttpStatus.NOT_FOUND, "Funcionário " + orderJob.getCpf() + " não encontrado!"));
         /**
          * set the jobs for specify employee
          */
-        if (!employee.isPresent()) {
-            return null;
-        }
+        List<Jobs> listJobs = new ListHandle<Jobs>().updateList(employee.getJobs(), orderJob.getJobs());
+        employee.setJobs(listJobs);
 
-        List<Jobs> listJobs = new ListHandle<Jobs>().updateList(employee.get().getJobs(), orderJob.getJobs());
-        employee.get().setJobs(listJobs);
-
-        managerRepo.save(foundManager.get());
+        managerRepo.save(manager);
 
         ModelMapper mapper = new ModelMapper();
         ResCreatedJobs resCreatedJobs = new ResCreatedJobs();
 
-        ResManagerToJobCreated managerToJobCreated = mapper.map(foundManager.get(), ResManagerToJobCreated.class);
-        ResEmployeeToJobCreated resEmployeeToJobCreated = mapper.map(employee.get(), ResEmployeeToJobCreated.class);
+        ResManagerToJobCreated managerToJobCreated = mapper.map(manager, ResManagerToJobCreated.class);
+        ResEmployeeToJobCreated resEmployeeToJobCreated = mapper.map(manager, ResEmployeeToJobCreated.class);
 
         resCreatedJobs.setManager(managerToJobCreated);
         resCreatedJobs.setEmployee(resEmployeeToJobCreated);
@@ -89,18 +87,24 @@ public class JobService {
      * @param reqManagerUpdateListJobs object to update the job
      * @return Manager with updated fields
      */
-    public Manager updateJobsListByManager(Long cnpj, Long cpf, Long id, ReqManagerUpdateListJobs reqManagerUpdateListJobs) {
-        Optional<Manager> managerFounded = managerRepo.findById(cnpj);
-        Employee employeeFounded = employeeRepo.findById(cpf).orElse(null);
+    public ResManager updateJobsListByManager(Long cnpj, Long cpf, Long id, ReqManagerUpdateListJobs reqManagerUpdateListJobs) {
+        Manager manager = managerRepo.findById(cnpj)
+                .orElseThrow(() -> new ApiRequestException(HttpStatus.NOT_FOUND, "Patrão " + cnpj + " não encontrado!"));
 
-        if (!managerFounded.isPresent()) {
-            return null;
-        }
+        Employee employeeFounded = employeeRepo.findById(cpf).orElseThrow(() -> new ApiRequestException(HttpStatus.NOT_FOUND, "Patrão " + cpf + " não encontrado!"));
 
-        Manager myManager = managerFounded.get();
+        Employee employee = manager.getEmployees()
+                .stream()
+                .filter(item -> item.getCpf().equals(cpf))
+                .findFirst()
+                .orElseThrow(() -> new ApiRequestException(HttpStatus.NOT_FOUND, " -> O patrão " + cnpj + " não possui o funcionario " + cpf + " na sua lista de funcionários!"));
 
-        Employee employee = myManager.getEmployees().stream().filter(item -> item.getCpf().equals(cpf)).findFirst().orElse(null);
-        Jobs job = employee.getJobs().stream().filter(item -> item.getId().equals(id)).findFirst().orElse(null);
+
+        Jobs job = employee.getJobs()
+                .stream()
+                .filter(item -> item.getId().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new ApiRequestException(HttpStatus.NOT_FOUND, " -> O funcionário " + cpf + " não possui o trabalho " + id + " atribuído!"));
 
         job.setDescription(reqManagerUpdateListJobs.getDescription());
         job.setName(reqManagerUpdateListJobs.getName());
@@ -116,12 +120,17 @@ public class JobService {
         employee.setEName(employeeFounded.getEName());
         employee.setPassword(employeeFounded.getPassword());
 
-        managerRepo.save(myManager);
-        return myManager;
+        managerRepo.save(manager);
+
+        ModelMapper mapper = new ModelMapper();
+        ResManager resManager = mapper.map(manager, ResManager.class);
+
+        return resManager;
     }
 
     public void deleteJob(Long id){
-        jobRepo.deleteById(id);
+        Jobs job = jobRepo.findById(id).orElseThrow(() -> new ApiRequestException(HttpStatus.NOT_FOUND, "Trabalho de id " + id + " não encontrado!"));
+        jobRepo.delete(job);
 
     }
 }

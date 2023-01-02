@@ -11,12 +11,10 @@ import valter.gabriel.Easy.Manager.domain.dto.res.ResManager;
 import valter.gabriel.Easy.Manager.exception.ApiRequestException;
 import valter.gabriel.Easy.Manager.handle.ListHandle;
 import valter.gabriel.Easy.Manager.repo.EmployeeRepo;
-import valter.gabriel.Easy.Manager.repo.JobRepo;
 import valter.gabriel.Easy.Manager.repo.ManagerRepo;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class EmployeeService {
@@ -73,13 +71,24 @@ public class EmployeeService {
      */
     public List<Employee> findAllEmployeeByManager(Long cnpj) {
         Manager manager = managerRepo.findById(cnpj)
-                .orElseThrow(() -> new ApiRequestException( HttpStatus.NOT_FOUND, " -> Usuário " + cnpj + " não foi encontrado!"));
+                .orElseThrow(() -> new ApiRequestException(HttpStatus.NOT_FOUND, " -> Usuário " + cnpj + " não foi encontrado!"));
 
         List<Employee> allEmployeeByManager = manager.getEmployees();
         if (allEmployeeByManager.isEmpty()) {
-            throw new ApiRequestException( HttpStatus.OK, " -> Você ainda não cadastrou nenhum funcionário!");
+            throw new ApiRequestException(HttpStatus.OK, " -> Você ainda não cadastrou nenhum funcionário!");
         }
         return allEmployeeByManager;
+    }
+
+    /**
+     * Method used to find employee by cpf
+     * @param cpf
+     * @return employee founded
+     */
+    public Employee findEmployeeById(Long cpf) {
+        return employeeRepo
+                .findById(cpf)
+                .orElseThrow(() -> new ApiRequestException(HttpStatus.NOT_FOUND, " -> Usuário " + cpf + " não foi encontrado!"));
     }
 
     /**
@@ -92,9 +101,9 @@ public class EmployeeService {
      */
     public ResManager updateEmployerByManager(Long cnpj, Long cpf, ReqManagerUpdateListEmployers reqManagerUpdateListEmployers) {
         Manager manager = managerRepo.findById(cnpj)
-                .orElseThrow(() -> new ApiRequestException( HttpStatus.NOT_FOUND, " -> Usuário " + cnpj + " não foi encontrado!"));
+                .orElseThrow(() -> new ApiRequestException(HttpStatus.NOT_FOUND, " -> Usuário " + cnpj + " não foi encontrado!"));
 
-        Employee employeeFounded = employeeRepo.findById(cpf).orElseThrow(() -> new ApiRequestException( HttpStatus.NOT_FOUND, " -> Usuário " + cpf + " não foi encontrado!"));
+        Employee employeeFounded = employeeRepo.findById(cpf).orElseThrow(() -> new ApiRequestException(HttpStatus.NOT_FOUND, " -> Usuário " + cpf + " não foi encontrado!"));
 
         Employee employee = manager.getEmployees()
                 .stream()
@@ -119,7 +128,7 @@ public class EmployeeService {
 
     public void deleteEmployeer(Long cnpj, Long cpf) {
         Manager manager = managerRepo.findById(cnpj)
-                .orElseThrow(() -> new ApiRequestException( HttpStatus.NOT_FOUND, " -> Usuário " + cnpj + " não foi encontrado!"));
+                .orElseThrow(() -> new ApiRequestException(HttpStatus.NOT_FOUND, " -> Usuário " + cnpj + " não foi encontrado!"));
 
         Employee employee = manager.getEmployees()
                 .stream()

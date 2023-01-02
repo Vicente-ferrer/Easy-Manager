@@ -44,6 +44,12 @@ public class EmployeeController {
         return new ResponseEntity<>(allEmployeeByManager, HttpStatus.OK);
     }
 
+    @GetMapping("employee/find-by-id/{cpf}")
+    public ResponseEntity<Employee> findEmployeeById(@PathVariable("cpf") Long cpf) {
+        Employee employee = employeeService.findEmployeeById(cpf);
+        return new ResponseEntity<>(employee, HttpStatus.OK);
+    }
+
     @PutMapping("employee/update-from/{cnpj}/where-id/{cpf}")
     public ResponseEntity<ResManager> updateEmployer(@PathVariable("cnpj") Long cnpj, @PathVariable("cpf") Long cpf, @RequestBody ReqManagerUpdateListEmployers reqManagerUpdateListEmployers) {
         ResManager resManager = employeeService.updateEmployerByManager(cnpj, cpf, reqManagerUpdateListEmployers);
