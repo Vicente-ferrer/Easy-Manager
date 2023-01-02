@@ -30,10 +30,8 @@ public class ManagerController {
 
     @PostMapping("manager/sign-up")
     public ResponseEntity<ResManagerCreated> createNewManager(@RequestBody ReqManager reqManager) {
-        managerService.createNewManager(reqManager);
-        ModelMapper mapper = new ModelMapper();
-        ResManagerCreated resManager = mapper.map(reqManager, ResManagerCreated.class);
-        return new ResponseEntity<>(resManager, HttpStatus.CREATED);
+        ResManagerCreated newManager = managerService.createNewManager(reqManager);
+        return new ResponseEntity<>(newManager, HttpStatus.CREATED);
     }
 
     @GetMapping("manager/find-by-cnpj/{cnpj}")
@@ -44,9 +42,7 @@ public class ManagerController {
 
     @PutMapping("manager/update-fields-from/{cnpj}")
     public ResponseEntity<ResManager> updateManagerFieldsWithoutListEmployers(@PathVariable("cnpj") Long cnpj, @RequestBody ReqManagerUpdate reqManagerUpdate) {
-        ModelMapper mapper = new ModelMapper();
-        Manager manager = managerService.updateManagerById(cnpj, reqManagerUpdate);
-        ResManager resManager = mapper.map(manager, ResManager.class);
+        final ResManager resManager = managerService.updateManagerById(cnpj, reqManagerUpdate);
         return new ResponseEntity<>(resManager, HttpStatus.OK);
     }
 
