@@ -23,12 +23,10 @@ public class EmployeeService {
 
     private final ManagerRepo managerRepo;
     private final EmployeeRepo employeeRepo;
-    private final JobRepo jobRepo;
 
-    public EmployeeService(ManagerRepo managerRepo, EmployeeRepo employeeRepo, JobRepo jobRepo) {
+    public EmployeeService(ManagerRepo managerRepo, EmployeeRepo employeeRepo) {
         this.managerRepo = managerRepo;
         this.employeeRepo = employeeRepo;
-        this.jobRepo = jobRepo;
     }
 
     /**
@@ -47,9 +45,9 @@ public class EmployeeService {
         reqManagerEmployee.getEmployees().forEach(employee -> {
 
             managerFounded.getEmployees().forEach(oldEmployee -> {
-                if (oldEmployee.getCpf().equals(employee.getCpf())){
+                if (oldEmployee.getCpf().equals(employee.getCpf())) {
                     throw new ApiRequestException(HttpStatus.CONFLICT, " -> Funcionário " + employee.getCpf() + " já está cadastrado para este patrão.");
-                }else{
+                } else {
                     employee.setHireDate(localDateTime);
                 }
 
@@ -74,7 +72,14 @@ public class EmployeeService {
      * @return list of employers for this manager
      */
     public List<Employee> findAllEmployeeByManager(Long cnpj) {
-        return managerRepo.findAllEmployeeByManager(cnpj);
+        Manager manager = managerRepo.findById(cnpj)
+                .orElseThrow(() -> new ApiRequestException( HttpStatus.NOT_FOUND, " -> Usuário " + cnpj + " não foi encontrado!"));
+
+        List<Employee> allEmployeeByManager = manager.getEmployees();
+        if (allEmployeeByManager.isEmpty()) {
+            throw new ApiRequestException( HttpStatus.OK, " -> Você ainda não cadastrou nenhum funcionário!");
+        }
+        return allEmployeeByManager;
     }
 
     /**
@@ -85,17 +90,17 @@ public class EmployeeService {
      * @param reqManagerUpdateListEmployers object to update the employer
      * @return manager object with updated employer
      */
-    public Manager updateEmployerByManager(Long cnpj, Long cpf, ReqManagerUpdateListEmployers reqManagerUpdateListEmployers) {
-        Optional<Manager> managerFounded = managerRepo.findById(cnpj);
-        Employee employeeFounded = employeeRepo.findById(cpf).orElse(null);
+    public ResManager updateEmployerByManager(Long cnpj, Long cpf, ReqManagerUpdateListEmployers reqManagerUpdateListEmployers) {
+        Manager manager = managerRepo.findById(cnpj)
+                .orElseThrow(() -> new ApiRequestException( HttpStatus.NOT_FOUND, " -> Usuário " + cnpj + " não foi encontrado!"));
 
-        if (!managerFounded.isPresent()) {
-            return null;
-        }
+        Employee employeeFounded = employeeRepo.findById(cpf).orElseThrow(() -> new ApiRequestException( HttpStatus.NOT_FOUND, " -> Usuário " + cpf + " não foi encontrado!"));
 
-        Manager myManager = managerFounded.get();
-
-        Employee employee = myManager.getEmployees().stream().filter(item -> item.getCpf().equals(cpf)).findFirst().orElse(null);
+        Employee employee = manager.getEmployees()
+                .stream()
+                .filter(item -> item.getCpf().equals(cpf))
+                .findFirst()
+                .orElseThrow(() -> new ApiRequestException(HttpStatus.NOT_FOUND, " -> O patrão " + cnpj + " não possui o funcionario " + cpf + " na sua lista de funcionários!"));
 
         employee.setIsActive(reqManagerUpdateListEmployers.getIsActive());
         employee.setBornDay(reqManagerUpdateListEmployers.getBornDay());
@@ -105,19 +110,26 @@ public class EmployeeService {
         employee.setPassword(reqManagerUpdateListEmployers.getPassword());
         employee.setJobs(employeeFounded.getJobs());
 
-        managerRepo.save(myManager);
-        return myManager;
+        managerRepo.save(manager);
+
+        ModelMapper mapper = new ModelMapper();
+
+        return mapper.map(manager, ResManager.class);
     }
 
     public void deleteEmployeer(Long cnpj, Long cpf) {
-        Manager manager = managerRepo.findById(cnpj).orElse(null);
-        Optional<Employee> employee = manager.getEmployees().stream().filter(item -> item.getCpf().equals(cpf)).findFirst();
-        if (!employee.isPresent()) {
-            return;
-        }
-        manager.getEmployees().remove(employee.get());
+        Manager manager = managerRepo.findById(cnpj)
+                .orElseThrow(() -> new ApiRequestException( HttpStatus.NOT_FOUND, " -> Usuário " + cnpj + " não foi encontrado!"));
+
+        Employee employee = manager.getEmployees()
+                .stream()
+                .filter(item -> item.getCpf().equals(cpf))
+                .findFirst()
+                .orElseThrow(() -> new ApiRequestException(HttpStatus.NOT_FOUND, " -> O patrão " + cnpj + " não possui o funcionario " + cpf + " na sua lista de funcionários!"));
+
+        manager.getEmployees().remove(employee);
         managerRepo.save(manager);
-        employeeRepo.delete(employee.get());
+        employeeRepo.delete(employee);
 
 
     }

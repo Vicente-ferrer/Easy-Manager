@@ -46,9 +46,7 @@ public class EmployeeController {
 
     @PutMapping("employee/update-from/{cnpj}/where-id/{cpf}")
     public ResponseEntity<ResManager> updateEmployer(@PathVariable("cnpj") Long cnpj, @PathVariable("cpf") Long cpf, @RequestBody ReqManagerUpdateListEmployers reqManagerUpdateListEmployers) {
-        ModelMapper mapper = new ModelMapper();
-        Manager manager = employeeService.updateEmployerByManager(cnpj, cpf, reqManagerUpdateListEmployers);
-        ResManager resManager = mapper.map(manager, ResManager.class);
+        ResManager resManager = employeeService.updateEmployerByManager(cnpj, cpf, reqManagerUpdateListEmployers);
         return new ResponseEntity<>(resManager, HttpStatus.OK);
     }
 
