@@ -17,5 +17,5 @@ public class ReqManagerUpdateListJobs {
     private Boolean isFinished;
     private Boolean wantDelete;
     private Boolean isCanceled;
-    private LocalDateTime finishDay;
+    private LocalDate finishDay;
 }

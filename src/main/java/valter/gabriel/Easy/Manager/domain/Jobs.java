@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -24,8 +25,8 @@ public class Jobs implements Serializable {
     private Boolean isFinished;
     private Boolean wantDelete;
     private Boolean isCanceled;
-    private LocalDateTime creationDay;
-    private LocalDateTime finishDay;
+    private LocalDate creationDay;
+    private LocalDate finishDay;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(insertable = false, updatable = false)

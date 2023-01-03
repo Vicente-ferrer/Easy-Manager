@@ -1,5 +1,6 @@
 package valter.gabriel.Easy.Manager.service;
 
+
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,9 @@ import valter.gabriel.Easy.Manager.repo.EmployeeRepo;
 import valter.gabriel.Easy.Manager.repo.JobRepo;
 import valter.gabriel.Easy.Manager.repo.ManagerRepo;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.List;
 
 @Service
@@ -46,12 +49,17 @@ public class JobService {
          */
         Manager manager = managerRepo.findById(orderJob.getCnpj()).orElseThrow(() -> new ApiRequestException(HttpStatus.NOT_FOUND, "Patrão " + orderJob.getCnpj() + " não encontrado!"));
 
-        LocalDateTime localDateTime = LocalDateTime.now();
+        LocalDate localDate = LocalDate.now();
         orderJob.getJobs().forEach(job -> {
-            job.setCreationDay(localDateTime);
-            job.setIsFinished(false);
-            job.setIsCanceled(false);
-            job.setWantDelete(false);
+            if (grantThatFinishDateIsBiggerThanCreationDate(localDate, job.getFinishDay())) {
+                job.setCreationDay(localDate);
+                job.setIsFinished(false);
+                job.setIsCanceled(false);
+                job.setWantDelete(false);
+            }else{
+                throw new ApiRequestException(HttpStatus.BAD_REQUEST, "Dia de finalização tem que ser maior do que o dia de criação do trabalho");
+            }
+
         });
 
         /**
@@ -84,9 +92,10 @@ public class JobService {
 
     /**
      * Method to update a specific job of a certain employee
-     * @param cnpj manager identifier
-     * @param cpf employer identifier
-     * @param id job id
+     *
+     * @param cnpj                     manager identifier
+     * @param cpf                      employer identifier
+     * @param id                       job id
      * @param reqManagerUpdateListJobs object to update the job
      * @return Manager with updated fields
      */
@@ -102,40 +111,53 @@ public class JobService {
                 .findFirst()
                 .orElseThrow(() -> new ApiRequestException(HttpStatus.NOT_FOUND, " -> O patrão " + cnpj + " não possui o funcionario " + cpf + " na sua lista de funcionários!"));
 
-
         Jobs job = employee.getJobs()
                 .stream()
                 .filter(item -> item.getId().equals(id))
                 .findFirst()
                 .orElseThrow(() -> new ApiRequestException(HttpStatus.NOT_FOUND, " -> O funcionário " + cpf + " não possui o trabalho " + id + " atribuído!"));
 
-        job.setDescription(reqManagerUpdateListJobs.getDescription());
-        job.setName(reqManagerUpdateListJobs.getName());
-        job.setIsCanceled(reqManagerUpdateListJobs.getIsCanceled());
-        job.setFinishDay(reqManagerUpdateListJobs.getFinishDay());
-        job.setWantDelete(reqManagerUpdateListJobs.getWantDelete());
-        job.setIsFinished(reqManagerUpdateListJobs.getIsFinished());
 
-        LocalDateTime localDateTime = LocalDateTime.now();
-        job.setCreationDay(localDateTime);
+        LocalDate localDate = LocalDate.now();
+        if (grantThatFinishDateIsBiggerThanCreationDate(localDate, reqManagerUpdateListJobs.getFinishDay())) {
+            job.setDescription(reqManagerUpdateListJobs.getDescription());
+            job.setName(reqManagerUpdateListJobs.getName());
+            job.setIsCanceled(reqManagerUpdateListJobs.getIsCanceled());
+            job.setFinishDay(reqManagerUpdateListJobs.getFinishDay());
+            job.setWantDelete(reqManagerUpdateListJobs.getWantDelete());
+            job.setIsFinished(reqManagerUpdateListJobs.getIsFinished());
 
-        employee.setIsActive(employeeFounded.getIsActive());
-        employee.setBornDay(employeeFounded.getBornDay());
-        employee.setEEmail(employeeFounded.getEEmail());
-        employee.setEPhone(employeeFounded.getEPhone());
-        employee.setEName(employeeFounded.getEName());
-        employee.setPassword(employeeFounded.getPassword());
+            job.setCreationDay(localDate);
 
-        managerRepo.save(manager);
+            employee.setIsActive(employeeFounded.getIsActive());
+            employee.setBornDay(employeeFounded.getBornDay());
+            employee.setEEmail(employeeFounded.getEEmail());
+            employee.setEPhone(employeeFounded.getEPhone());
+            employee.setEName(employeeFounded.getEName());
+            employee.setPassword(employeeFounded.getPassword());
 
-        ModelMapper mapper = new ModelMapper();
+            managerRepo.save(manager);
+            ModelMapper mapper = new ModelMapper();
+            return mapper.map(manager, ResManager.class);
+        } else {
+            throw new ApiRequestException(HttpStatus.BAD_REQUEST, "Dia de finalização tem que ser maior do que o dia de criação do trabalho");
+        }
 
-        return mapper.map(manager, ResManager.class);
     }
 
-    public void deleteJob(Long id){
+    public void deleteJob(Long id) {
         Jobs job = jobRepo.findById(id).orElseThrow(() -> new ApiRequestException(HttpStatus.NOT_FOUND, "Trabalho de id " + id + " não encontrado!"));
         jobRepo.delete(job);
 
+    }
+
+    private Boolean grantThatFinishDateIsBiggerThanCreationDate(LocalDate creationDate, LocalDate finishDate) {
+        return finishDate.isAfter(creationDate);
+    }
+
+    private String getPeriodBetweenTwoDates(LocalDate creationDate, LocalDate finishDate) {
+        grantThatFinishDateIsBiggerThanCreationDate(creationDate, finishDate);
+        Period period = Period.between(creationDate, finishDate);
+        return "Tempo de trabalho: " + period.getDays();
     }
 }
