@@ -49,6 +49,9 @@ public class JobService {
         LocalDateTime localDateTime = LocalDateTime.now();
         orderJob.getJobs().forEach(job -> {
             job.setCreationDay(localDateTime);
+            job.setIsFinished(false);
+            job.setIsCanceled(false);
+            job.setWantDelete(false);
         });
 
         /**
@@ -71,7 +74,7 @@ public class JobService {
         ResCreatedJobs resCreatedJobs = new ResCreatedJobs();
 
         ResManagerToJobCreated managerToJobCreated = mapper.map(manager, ResManagerToJobCreated.class);
-        ResEmployeeToJobCreated resEmployeeToJobCreated = mapper.map(manager, ResEmployeeToJobCreated.class);
+        ResEmployeeToJobCreated resEmployeeToJobCreated = mapper.map(employee, ResEmployeeToJobCreated.class);
 
         resCreatedJobs.setManager(managerToJobCreated);
         resCreatedJobs.setEmployee(resEmployeeToJobCreated);
@@ -108,7 +111,10 @@ public class JobService {
 
         job.setDescription(reqManagerUpdateListJobs.getDescription());
         job.setName(reqManagerUpdateListJobs.getName());
-        job.setUrlImage(reqManagerUpdateListJobs.getUrlImage());
+        job.setIsCanceled(reqManagerUpdateListJobs.getIsCanceled());
+        job.setFinishDay(reqManagerUpdateListJobs.getFinishDay());
+        job.setWantDelete(reqManagerUpdateListJobs.getWantDelete());
+        job.setIsFinished(reqManagerUpdateListJobs.getIsFinished());
 
         LocalDateTime localDateTime = LocalDateTime.now();
         job.setCreationDay(localDateTime);
@@ -123,9 +129,8 @@ public class JobService {
         managerRepo.save(manager);
 
         ModelMapper mapper = new ModelMapper();
-        ResManager resManager = mapper.map(manager, ResManager.class);
 
-        return resManager;
+        return mapper.map(manager, ResManager.class);
     }
 
     public void deleteJob(Long id){

@@ -21,8 +21,11 @@ public class Jobs implements Serializable {
     private Long id;
     private String name;
     private String description;
-    private String urlImage;
+    private Boolean isFinished;
+    private Boolean wantDelete;
+    private Boolean isCanceled;
     private LocalDateTime creationDay;
+    private LocalDateTime finishDay;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(insertable = false, updatable = false)

@@ -41,15 +41,12 @@ public class EmployeeService {
         LocalDate localDateTime = LocalDate.now();
 
         reqManagerEmployee.getEmployees().forEach(employee -> {
-
             managerFounded.getEmployees().forEach(oldEmployee -> {
                 if (oldEmployee.getCpf().equals(employee.getCpf())) {
                     throw new ApiRequestException(HttpStatus.CONFLICT, " -> Funcionário " + employee.getCpf() + " já está cadastrado para este patrão.");
-                } else {
-                    employee.setHireDate(localDateTime);
                 }
-
             });
+            employee.setHireDate(localDateTime);
         });
 
         List<Employee> employeeList = new ListHandle<Employee>().updateList(managerFounded.getEmployees(), reqManagerEmployee.getEmployees());
@@ -117,6 +114,7 @@ public class EmployeeService {
         employee.setEPhone(reqManagerUpdateListEmployers.getEPhone());
         employee.setEName(reqManagerUpdateListEmployers.getEName());
         employee.setPassword(reqManagerUpdateListEmployers.getPassword());
+
         employee.setJobs(employeeFounded.getJobs());
 
         managerRepo.save(manager);

@@ -14,5 +14,8 @@ import java.time.LocalDateTime;
 public class ReqManagerUpdateListJobs {
     private String name;
     private String description;
-    private String urlImage;
+    private Boolean isFinished;
+    private Boolean wantDelete;
+    private Boolean isCanceled;
+    private LocalDateTime finishDay;
 }
