@@ -13,7 +13,7 @@
 <h1>How to use</h1>
 <h2>Prerequisites</h2>
 <p>First, you must have the MySql database installed on your computer, which can be downloaded through this <a href="https://www.mysql.com/downloads/">link</a>.</br>
-<p>Then, <a href="https://insomnia.rest/download">download</a> Insomnia to make http requestspa.</br>
+<p>Then, <a href="https://insomnia.rest/download">download</a> Insomnia to make http requests.</br>
 <p>After that, create a local database with name manageremployee and give it the root name and password of your choice, just make sure you change the spring.datasource.password variable in the application.properties to the password you set.</br></br>
   <img src="https://user-images.githubusercontent.com/63808405/210464300-8497e99d-b41d-4d57-8e41-87ba76e3c8fa.png"/>
   
