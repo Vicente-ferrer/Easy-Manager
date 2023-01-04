@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import valter.gabriel.Easy.Manager.domain.Email;
 import valter.gabriel.Easy.Manager.domain.Employee;
 import valter.gabriel.Easy.Manager.domain.Jobs;
 import valter.gabriel.Easy.Manager.domain.Manager;
@@ -26,9 +27,8 @@ public class EmailService {
         this.managerRepo = managerRepo;
     }
 
-    public String sendEmail(Long cnpj, Long cpf, Long id, String reason) {
+    public String sendEmailToCancel(Long cnpj, Long cpf, Long id, Email email) {
         Manager manager = managerRepo.findById(cnpj).orElseThrow(() -> new ApiRequestException(HttpStatus.NOT_FOUND, " -> CNPJ " + cnpj + " não encontrado"));
-
 
         final Employee employee = manager.getEmployees()
                 .stream()
@@ -47,12 +47,43 @@ public class EmailService {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         String text = "DE: " + employee.getEName() + " com identificador " +
                 employee.getCpf() + " solicita cancelamento do trabalho com identificação " + id + " | " + jobs.getName() +
-                " por conta de " + reason + ".";
+                " por conta de " + email.getReason() + ".";
 
         mailMessage.setFrom("vgabrielbri@gmail.com");
         mailMessage.setTo(manager.getMEmail());
         mailMessage.setText(text);
         mailMessage.setSubject("SOLICITAÇÃO DE CANCELAMENTO DE TRABALHO");
+
+        javaMailSender.send(mailMessage);
+        return "Email enviado.";
+}
+
+    public String sendEmailToUpdate(Long cnpj, Long cpf, Long id, Email email) {
+        Manager manager = managerRepo.findById(cnpj).orElseThrow(() -> new ApiRequestException(HttpStatus.NOT_FOUND, " -> CNPJ " + cnpj + " não encontrado"));
+
+        final Employee employee = manager.getEmployees()
+                .stream()
+                .filter(_employee -> _employee.getCpf().equals(cpf))
+                .findFirst()
+                .orElseThrow(() -> new ApiRequestException(HttpStatus.NOT_FOUND, " -> CNPJ " + cnpj + " não possui o " + cpf + " na sua lista de funcionários."));
+
+        Jobs jobs = employee.getJobs()
+                .stream()
+                .filter(job -> job.getId().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new ApiRequestException(HttpStatus.NOT_FOUND, " -> CPF " + cpf + " não possui o trabalho com identificador" + id + " na sua lista de trabalhos."));
+
+
+
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        String text = "DE: " + employee.getEName() + " com identificador " +
+                employee.getCpf() + " solicita a atualização do prazo de trabalho no serviço: " + id + " | " + jobs.getName() +
+                " por conta de " + email.getReason() + ".";
+
+        mailMessage.setFrom("vgabrielbri@gmail.com");
+        mailMessage.setTo(manager.getMEmail());
+        mailMessage.setText(text);
+        mailMessage.setSubject("SOLICITAÇÃO DE ATUALIZAÇÃO DO PRAZO DO TRABALHO");
 
         javaMailSender.send(mailMessage);
         return "Email enviado.";

@@ -23,6 +23,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class JobService {
@@ -56,7 +57,7 @@ public class JobService {
                 job.setIsFinished(false);
                 job.setIsCanceled(false);
                 job.setWantDelete(false);
-            }else{
+            } else {
                 throw new ApiRequestException(HttpStatus.BAD_REQUEST, "Dia de finalização tem que ser maior do que o dia de criação do trabalho");
             }
 
@@ -145,6 +146,42 @@ public class JobService {
 
     }
 
+    public List<Jobs> getAllJobsDelete() {
+        return jobRepo.findAll()
+                .stream()
+                .filter(job -> job.getWantDelete().equals(true))
+                .collect(Collectors.toList());
+    }
+
+    public List<Jobs> getAllJobsCanceled() {
+        return jobRepo.findAll()
+                .stream()
+                .filter(job -> job.getIsCanceled().equals(true))
+                .collect(Collectors.toList());
+    }
+
+    public List<Jobs> getAllJobsFinished() {
+        return jobRepo.findAll()
+                .stream()
+                .filter(job -> job.getIsFinished().equals(true))
+                .collect(Collectors.toList());
+    }
+
+    public List<Jobs> getAllJobs() {
+        return jobRepo.findAll();
+    }
+
+    public List<Jobs> getJobsThatExpiresOnCurrentDay() {
+        return jobRepo.findAll()
+                .stream()
+                .filter(job -> job.getFinishDay().isEqual(LocalDate.now()))
+                .collect(Collectors.toList());
+    }
+
+    public Jobs getJobById(Long id) {
+        return jobRepo.findById(id).orElseThrow(() -> new ApiRequestException(HttpStatus.NOT_FOUND, " -> Trabalho não encontrado!"));
+    }
+
     public void deleteJob(Long id) {
         Jobs job = jobRepo.findById(id).orElseThrow(() -> new ApiRequestException(HttpStatus.NOT_FOUND, "Trabalho de id " + id + " não encontrado!"));
         jobRepo.delete(job);
@@ -154,6 +191,7 @@ public class JobService {
     private Boolean grantThatFinishDateIsBiggerThanCreationDate(LocalDate creationDate, LocalDate finishDate) {
         return finishDate.isAfter(creationDate);
     }
+
 
     private String getPeriodBetweenTwoDates(LocalDate creationDate, LocalDate finishDate) {
         grantThatFinishDateIsBiggerThanCreationDate(creationDate, finishDate);
