@@ -46,6 +46,9 @@ public class EmployeeService {
                     throw new ApiRequestException(HttpStatus.CONFLICT, " -> Funcionário " + employee.getCpf() + " já está cadastrado para este patrão.");
                 }
             });
+            if (String.valueOf(employee.getCpf()).length() != 11) {
+                throw new ApiRequestException(HttpStatus.LENGTH_REQUIRED, "O tamanho do CPF está incorreto, precisa ter 11 digitos");
+            }
             employee.setHireDate(localDateTime);
         });
 
@@ -79,6 +82,7 @@ public class EmployeeService {
 
     /**
      * Method used to find employee by cpf
+     *
      * @param cpf
      * @return employee founded
      */
@@ -97,6 +101,13 @@ public class EmployeeService {
      * @return manager object with updated employer
      */
     public ResManager updateEmployerByManager(Long cnpj, Long cpf, ReqManagerUpdateListEmployers reqManagerUpdateListEmployers) {
+
+
+        if (String.valueOf(cpf).length() != 11) {
+            throw new ApiRequestException(HttpStatus.LENGTH_REQUIRED, "O tamanho do CPF está incorreto, precisa ter 11 digitos");
+        }
+
+
         Manager manager = managerRepo.findById(cnpj)
                 .orElseThrow(() -> new ApiRequestException(HttpStatus.NOT_FOUND, " -> Usuário " + cnpj + " não foi encontrado!"));
 

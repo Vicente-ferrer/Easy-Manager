@@ -38,9 +38,19 @@ public class ManagerService {
             throw new ApiRequestException(HttpStatus.BAD_REQUEST, "Usuário " + reqManager.getCnpj() + " já existente no banco de dados");
         }
 
+        if (String.valueOf(reqManager.getCnpj()).length() != 14){
+            throw new ApiRequestException(HttpStatus.LENGTH_REQUIRED, "O tamanho do CNPJ está incorreto, precisa ter 14 digitos");
+        }
+
+
         ModelMapper mapper = new ModelMapper();
         Manager manager = mapper.map(reqManager, Manager.class);
         LocalDate localDateTime = LocalDate.now();
+
+        if (reqManager.getBornDay().isAfter(localDateTime) || reqManager.getBornDay().isEqual(localDateTime)){
+            throw new ApiRequestException(HttpStatus.NOT_ACCEPTABLE, " -> A data de nascimento precisa ser válida!");
+        }
+
         manager.setCreationDate(localDateTime);
         managerRepo.save(manager);
         return mapper.map(manager, ResManagerCreated.class);
