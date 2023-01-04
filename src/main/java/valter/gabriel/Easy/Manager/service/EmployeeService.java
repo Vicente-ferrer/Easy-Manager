@@ -47,7 +47,7 @@ public class EmployeeService {
                 }
             });
             if (String.valueOf(employee.getCpf()).length() != 11) {
-                throw new ApiRequestException(HttpStatus.LENGTH_REQUIRED, "O tamanho do CPF está incorreto, precisa ter 11 digitos");
+                throw new ApiRequestException(HttpStatus.LENGTH_REQUIRED, "O tamanho do CPF está incorreto, precisa ter 11 digitos!");
             }
             employee.setHireDate(localDateTime);
         });
