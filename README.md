@@ -22,7 +22,7 @@
   <img src="https://user-images.githubusercontent.com/63808405/210464535-78bc1e12-6b5a-490a-851b-9c90b2c93a30.png"/>
    <img src="https://user-images.githubusercontent.com/63808405/210464553-93c736f3-37dd-4008-9f7d-a051eb4cd8ef.png"/>
    
-  <p>Change spring.email and spring.password to your google email and token.</br>
+  <p>Change spring.username and spring.password to your google email and token.</br>
   <p>Run the app.</br>
   
 <h2>Endpoints</h2>
