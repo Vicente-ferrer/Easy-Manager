@@ -243,7 +243,7 @@ the manager will receive the following email: </br></br>
 <img src="https://user-images.githubusercontent.com/63808405/210468015-a903478e-c2d2-4ce5-979e-9f0b53afac8d.png"/></br></br>
 
 
-<h2>Other application endpoints</h2></br>
+<h1>Other application endpoints</h1></br>
 
 
 <h3>GET</h3></br>
@@ -251,7 +251,15 @@ the manager will receive the following email: </br></br>
 ```bash
 Request | Response
 :-------: | ------:
-
+manager/find-by-cnpj/{cnpj} | find manager by cnpj
+employee/find-all-by-manager/{cnpj} | return all manager's employers
+employee/find-by-id/{cpf} | find employee by cpf
+job/get/all | return all jobs
+job/get/all-canceled | return all jobs that are canceled
+job/get/all-finished | return all jobs that are finished
+job/get/all-to-delete | return all jobs that want to delete
+job/get/expires-today | return all jobs that expire on the current day
+job/get-by-id{id} | return job by id
 ```
 
 
@@ -266,7 +274,7 @@ employee/delete/{cpf}/from/{cnpj}   | Delete the employee of a specific manager
 manager/delete/{cnpj}   | Delete specific manager
 ```
 
-<h2>All application endpoints</h2></br>
+<h1>All application endpoints</h1></br>
 
 <h3>POST</h3></br>
 
@@ -302,6 +310,15 @@ job/update/{id}/where-employer/{cpf}/from-manager/{cnpj}   | update job
 ```bash
 Request | Response
 :-------: | ------:
+manager/find-by-cnpj/{cnpj} | find manager by cnpj
+employee/find-all-by-manager/{cnpj} | return all manager's employers
+employee/find-by-id/{cpf} | find employee by cpf
+job/get/all | return all jobs
+job/get/all-canceled | return all jobs that are canceled
+job/get/all-finished | return all jobs that are finished
+job/get/all-to-delete | return all jobs that want to delete
+job/get/expires-today | return all jobs that expire on the current day
+job/get-by-id{id} | return job by id
 ```
 
 
