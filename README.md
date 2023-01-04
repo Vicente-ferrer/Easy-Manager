@@ -5,6 +5,7 @@
    * [About](#about)
    * [How to use](#how-to-use)
    * [Credits](#credits)
+   * [Exceptions](#exceptions)
 <!--te-->
 
 <h1>About</h1>
@@ -332,6 +333,24 @@ job/delete/{id}   | Delete the specified job
 employee/delete/{cpf}/from/{cnpj}   | Delete the employee of a specific manager
 manager/delete/{cnpj}   | Delete specific manager
 ```
+
+
+<h1>Exceptions</h1>
+
+```bash
+The CPF must have 11 digits
+
+The CNPJ must have 14 digits
+
+Birth date must be less than the current date
+
+If the manager tries to register an existing employee, an exception will be generated.
+
+The manager cannot update an employee that does not belong to him
+
+
+```
+
 
 <h1>Credits</h1>
 
