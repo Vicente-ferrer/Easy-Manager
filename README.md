@@ -253,7 +253,7 @@ the manager will receive the following email: </br></br>
 Request | Response
 :-------: | ------:
 manager/find-by-cnpj/{cnpj} | find manager by cnpj
-employee/find-all-by-manager/{cnpj} | return all manager's employers
+employee/find-all-by-manager/{cnpj} | return all managers employers
 employee/find-by-id/{cpf} | find employee by cpf
 job/get/all | return all jobs
 job/get/all-canceled | return all jobs that are canceled
@@ -312,7 +312,7 @@ job/update/{id}/where-employer/{cpf}/from-manager/{cnpj}   | update job
 Request | Response
 :-------: | ------:
 manager/find-by-cnpj/{cnpj} | find manager by cnpj
-employee/find-all-by-manager/{cnpj} | return all manager's employers
+employee/find-all-by-manager/{cnpj} | return all managers employers
 employee/find-by-id/{cpf} | find employee by cpf
 job/get/all | return all jobs
 job/get/all-canceled | return all jobs that are canceled
