@@ -4,8 +4,9 @@
 <!--ts-->
    * [About](#about)
    * [How to use](#how-to-use)
-   * [Credits](#credits)
+   * [All application endpoints](#all-application-endpoints)
    * [Exceptions](#exceptions)
+   * [Credits](#credits)
 <!--te-->
 
 <h1>About</h1>
