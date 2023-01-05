@@ -4,6 +4,7 @@
 <!--ts-->
    * [About](#about)
    * [How to use](#how-to-use)
+   * [Endpoint's Flow](#endpoints-flow)
    * [All application endpoints](#all-application-endpoints)
    * [Exceptions](#exceptions)
    * [Credits](#credits)
@@ -27,7 +28,7 @@
   <p>Change spring.username and spring.password to your google email and token.</br>
   <p>Run the app.</br>
   
-<h2>Endpoints</h2>
+<h1>Endpoint's Flow</h1>
 <p>After doing all that, let's go to the endpoints.</br>
 <h3>BASE URL</h3>
 
