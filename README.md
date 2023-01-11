@@ -14,6 +14,18 @@
 <p align="center">This repository contains an API (Application Programming Interface) developed in Java Spring that allows users to access and interact with the resources of an employee management system in a pragmatic way. The API provides a standardized interface for requests and responses between the system and users, allowing third parties to develop applications that integrate and utilize system resources quickly and efficiently.</p>
   </br>
 <h1>How to use</h1>
+<h2>Attention</h2>
+
+If you don't want to follow the step by step below, the "deploy" branch is hosted on Railway, so to use it, just use the following URL as the base URL:
+
+```
+https://easy-manager-production.up.railway.app/api/v1/
+
+```
+and then, normally follow the endpoints.
+
+
+
 <h2>Prerequisites</h2>
 <p>First, you must have the MySql database installed on your computer, which can be downloaded through this <a href="https://www.mysql.com/downloads/">link</a>.</br>
 <p>Then, <a href="https://insomnia.rest/download">download</a> Insomnia to make http requests.</br>
@@ -32,8 +44,14 @@
 <p>After doing all that, let's go to the endpoints.</br>
 <h3>BASE URL</h3>
 
+for locahost
 ```bash
-http://localhost:8080/api/v1/
+http://localhost:8080/api/v1/ 
+``` 
+
+for Railway
+```bash
+https://easy-manager-production.up.railway.app/api/v1/
 ``` 
 
 To create a new manager, use:
