@@ -58,7 +58,7 @@ To create a new manager, use:
 
 ```bash
 @POST
-manager/create-employee
+manager/sign-up
 ``` 
 with the request body
 
