@@ -58,24 +58,22 @@ To create a new manager, use:
 
 ```bash
 @POST
-employee/create-employee
+manager/create-employee
 ``` 
 with the request body
 
 ```bash
-{	
-
-"cnpj":987654321,
-"mname":"Joao Ferreira",
-"memail":"joaoferreira@hotmail.com",
-"mcompany":"Dev Cast",
-"mphone":"+5596123547895",
-"isActive":1,
-"gender":0,
-"bornDay":"2020-12-31",
-"password":"123"
-
-  }
+{
+	"cnpj":12345673901234,
+	"mname":"Akaz Ferreira",
+	"memail":"valoira08r@hotmail.com",
+	"mcompany":"Dev Cast",
+	"mphone":"+5596123547895",
+	"isActive":1,
+	"gender":0,
+	"bornDay":"2020-12-31",
+	"password":"123"
+}
 ``` 
 Where cnpj is the manager's identifier, mcompany the name of his company, gender which can be MALE and FEMALE with 0 and 1 respectively.
 Done that, wait for this answer.
