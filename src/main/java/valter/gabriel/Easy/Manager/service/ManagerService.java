@@ -31,7 +31,7 @@ public class ManagerService {
      *                    jobs and employers because this is something done after the creation of the manager
      */
 
-    public ResManagerCreated createNewManager(ReqManager reqManager) {
+    public CreateManagerDTO createNewManager(ReqManager reqManager) {
         final boolean present = managerRepo.findById(reqManager.getCnpj()).isPresent();
 
         if (present) {
@@ -53,7 +53,7 @@ public class ManagerService {
 
         manager.setCreationDate(localDateTime);
         managerRepo.save(manager);
-        return mapper.map(manager, ResManagerCreated.class);
+        return mapper.map(manager, CreateManagerDTO.class);
     }
 
     /**
@@ -63,7 +63,7 @@ public class ManagerService {
      * @param reqManagerUpdate manager object to be updated
      * @return manager updated
      */
-    public ResManager updateManagerById(Long cnpj, ReqManagerUpdate reqManagerUpdate) {
+    public ManagerEmployeeCreatedDTO updateManagerById(Long cnpj, ReqManagerUpdate reqManagerUpdate) {
         Optional<Manager> managerFounded = managerRepo.findById(cnpj);
 
         if (!managerFounded.isPresent()) {
@@ -81,7 +81,7 @@ public class ManagerService {
         managerRepo.save(myManager);
 
         ModelMapper mapper = new ModelMapper();
-        return mapper.map(myManager, ResManager.class);
+        return mapper.map(myManager, ManagerEmployeeCreatedDTO.class);
     }
 
     /**

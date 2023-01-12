@@ -7,7 +7,7 @@ import valter.gabriel.Easy.Manager.domain.Employee;
 import valter.gabriel.Easy.Manager.domain.Manager;
 import valter.gabriel.Easy.Manager.domain.dto.req.ReqManagerEmployee;
 import valter.gabriel.Easy.Manager.domain.dto.req.ReqManagerUpdateListEmployers;
-import valter.gabriel.Easy.Manager.domain.dto.res.ResManager;
+import valter.gabriel.Easy.Manager.domain.dto.res.ManagerEmployeeCreatedDTO;
 import valter.gabriel.Easy.Manager.exception.ApiRequestException;
 import valter.gabriel.Easy.Manager.handle.ListHandle;
 import valter.gabriel.Easy.Manager.repo.EmployeeRepo;
@@ -33,7 +33,7 @@ public class EmployeeService {
      * @param reqManagerEmployee manager object that has to be passed
      * @return manager object with the list of employers updated
      */
-    public ResManager createNewEmployeeByManager(ReqManagerEmployee reqManagerEmployee) {
+    public ManagerEmployeeCreatedDTO createNewEmployeeByManager(ReqManagerEmployee reqManagerEmployee) {
         Manager managerFounded = managerRepo
                 .findById(reqManagerEmployee.getCnpj())
                 .orElseThrow(() -> new ApiRequestException(HttpStatus.NOT_FOUND, " -> Usuário com CNPJ: " + reqManagerEmployee.getCnpj() + " não foi encontrado"));
@@ -59,7 +59,7 @@ public class EmployeeService {
         managerRepo.save(managerFounded);
 
         ModelMapper mapper = new ModelMapper();
-        return mapper.map(managerFounded, ResManager.class);
+        return mapper.map(managerFounded, ManagerEmployeeCreatedDTO.class);
     }
 
 
@@ -100,7 +100,7 @@ public class EmployeeService {
      * @param reqManagerUpdateListEmployers object to update the employer
      * @return manager object with updated employer
      */
-    public ResManager updateEmployerByManager(Long cnpj, Long cpf, ReqManagerUpdateListEmployers reqManagerUpdateListEmployers) {
+    public ManagerEmployeeCreatedDTO updateEmployerByManager(Long cnpj, Long cpf, ReqManagerUpdateListEmployers reqManagerUpdateListEmployers) {
 
 
         if (String.valueOf(cpf).length() != 11) {
@@ -132,7 +132,7 @@ public class EmployeeService {
 
         ModelMapper mapper = new ModelMapper();
 
-        return mapper.map(manager, ResManager.class);
+        return mapper.map(manager, ManagerEmployeeCreatedDTO.class);
     }
 
     public void deleteEmployeer(Long cnpj, Long cpf) {

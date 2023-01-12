@@ -8,7 +8,7 @@ import valter.gabriel.Easy.Manager.domain.Email;
 import valter.gabriel.Easy.Manager.service.EmailService;
 
 @RestController
-@RequestMapping("/api/v1/")
+@RequestMapping("/api/v1/email")
 public class EmailController {
 
 
@@ -21,13 +21,13 @@ public class EmailController {
 
 
 
-    @PostMapping("email/request-delete/{cnpj}/{cpf}/{id}")
+    @PostMapping("/request-delete/{cnpj}/{cpf}/{id}")
     public ResponseEntity<String> triggerMailDelete(@PathVariable("cnpj") Long cnpj, @PathVariable("cpf") Long cpf, @PathVariable("id") Long id, @RequestBody Email email) {
         String msg = emailService.sendEmailToCancel(cnpj, cpf,id, email);
         return new ResponseEntity<>(msg, HttpStatus.OK);
     }
 
-    @PostMapping("email/request-extend-time/{cnpj}/{cpf}/{id}")
+    @PostMapping("/request-extend-time/{cnpj}/{cpf}/{id}")
     public ResponseEntity<String> triggerMailUpdate(@PathVariable("cnpj") Long cnpj, @PathVariable("cpf") Long cpf, @PathVariable("id") Long id, @RequestBody Email email) {
         String msg = emailService.sendEmailToUpdate(cnpj, cpf,id, email);
         return new ResponseEntity<>(msg, HttpStatus.OK);
