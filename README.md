@@ -272,13 +272,21 @@ the manager will receive the following email: </br></br>
 Request | Response
 :-------: | ------:
 manager/find-by-cnpj/{cnpj} | find manager by cnpj
+
 employee/find-all-by-manager/{cnpj} | return all managers employers
+
 employee/find-by-id/{cpf} | find employee by cpf
+
 job/get/all | return all jobs
+
 job/get/all-canceled | return all jobs that are canceled
+
 job/get/all-finished | return all jobs that are finished
+
 job/get/all-to-delete | return all jobs that want to delete
+
 job/get/expires-today | return all jobs that expire on the current day
+
 job/get-by-id{id} | return job by id
 ```
 
@@ -290,7 +298,9 @@ job/get-by-id{id} | return job by id
 Request | Response
 :-------: | ------:
 job/delete/{id}   | Delete the specified job
+
 employee/delete/{cpf}/from/{cnpj}   | Delete the employee of a specific manager
+
 manager/delete/{cnpj}   | Delete specific manager
 ```
 
@@ -302,7 +312,9 @@ manager/delete/{cnpj}   | Delete specific manager
 Request | Response
 :-------: | ------:
 manager/sign-up   | create a new manager
+
 email/request-delete/{cnpj}/{cpf}/{id}   | request deletion of a job by email
+
 email/request-extend-time/{cnpj}/{cpf}/{id}   | request the update of a work by email
 ```
 
@@ -312,6 +324,7 @@ email/request-extend-time/{cnpj}/{cpf}/{id}   | request the update of a work by 
 Request | Response
 :-------: | ------:
 employee/create-employee   | create a new employee
+
 create-employee   | create a new job
 ```
 
@@ -321,7 +334,9 @@ create-employee   | create a new job
 Request | Response
 :-------: | ------:
 manager/update-fields-from/{cnpj}   | update manager
+
 employee/update-from/{cnpj}/where-id/{cpf}   | update employee
+
 job/update/{id}/where-employer/{cpf}/from-manager/{cnpj}   | update job
 ```
 
@@ -331,13 +346,21 @@ job/update/{id}/where-employer/{cpf}/from-manager/{cnpj}   | update job
 Request | Response
 :-------: | ------:
 manager/find-by-cnpj/{cnpj} | find manager by cnpj
+
 employee/find-all-by-manager/{cnpj} | return all managers employers
+
 employee/find-by-id/{cpf} | find employee by cpf
+
 job/get/all | return all jobs
+
 job/get/all-canceled | return all jobs that are canceled
+
 job/get/all-finished | return all jobs that are finished
+
 job/get/all-to-delete | return all jobs that want to delete
+
 job/get/expires-today | return all jobs that expire on the current day
+
 job/get-by-id{id} | return job by id
 ```
 
@@ -348,7 +371,9 @@ job/get-by-id{id} | return job by id
 Request | Response
 :-------: | ------:
 job/delete/{id}   | Delete the specified job
+
 employee/delete/{cpf}/from/{cnpj}   | Delete the employee of a specific manager
+
 manager/delete/{cnpj}   | Delete specific manager
 ```
 
