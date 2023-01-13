@@ -36,15 +36,11 @@
 <p>After doing all that, let's go to the endpoints.</br>
 <h3>BASE URL</h3>
 
-for locahost
+
 ```bash
 http://localhost:8080/api/v1/ 
 ``` 
 
-for Railway
-```bash
-https://easy-manager-production.up.railway.app/api/v1/
-``` 
 
 To create a new manager, use:
 
