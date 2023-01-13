@@ -345,6 +345,8 @@ job/update/{id}/where-employer/{cpf}/from-manager/{cnpj}   | update job
 ```bash
 Request | Response
 :-------: | ------:
+manager/find-all | find all managers
+
 manager/find-by-cnpj/{cnpj} | find manager by cnpj
 
 employee/find-all-by-manager/{cnpj} | return all managers employers
