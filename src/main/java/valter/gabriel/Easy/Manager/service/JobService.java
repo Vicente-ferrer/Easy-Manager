@@ -9,10 +9,10 @@ import valter.gabriel.Easy.Manager.domain.Jobs;
 import valter.gabriel.Easy.Manager.domain.Manager;
 import valter.gabriel.Easy.Manager.domain.dto.req.OrderJob;
 import valter.gabriel.Easy.Manager.domain.dto.req.ReqManagerUpdateListJobs;
-import valter.gabriel.Easy.Manager.domain.dto.res.ResCreatedJobs;
-import valter.gabriel.Easy.Manager.domain.dto.res.ResEmployeeToJobCreated;
-import valter.gabriel.Easy.Manager.domain.dto.res.ResManager;
-import valter.gabriel.Easy.Manager.domain.dto.res.ResManagerToJobCreated;
+import valter.gabriel.Easy.Manager.domain.dto.res.CreateJobsDTO;
+import valter.gabriel.Easy.Manager.domain.dto.res.EmployeeToJobsCreatedDTO;
+import valter.gabriel.Easy.Manager.domain.dto.res.ManagerEmployeeCreatedDTO;
+import valter.gabriel.Easy.Manager.domain.dto.res.ManagerToJobCreateDTO;
 import valter.gabriel.Easy.Manager.exception.ApiRequestException;
 import valter.gabriel.Easy.Manager.handle.ListHandle;
 import valter.gabriel.Easy.Manager.repo.EmployeeRepo;
@@ -20,7 +20,6 @@ import valter.gabriel.Easy.Manager.repo.JobRepo;
 import valter.gabriel.Easy.Manager.repo.ManagerRepo;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -44,7 +43,7 @@ public class JobService {
      * @param orderJob object that receive cnpj of manager and cpf of employer that has to do the work
      * @return object resCreatedJobs that represents the manager of job and the employer that jobs has associated
      */
-    public ResCreatedJobs createNewJob(OrderJob orderJob) {
+    public CreateJobsDTO createNewJob(OrderJob orderJob) {
         /**
          * Finding the manager to update job list
          */
@@ -80,15 +79,15 @@ public class JobService {
         managerRepo.save(manager);
 
         ModelMapper mapper = new ModelMapper();
-        ResCreatedJobs resCreatedJobs = new ResCreatedJobs();
+        CreateJobsDTO createJobsDTO = new CreateJobsDTO();
 
-        ResManagerToJobCreated managerToJobCreated = mapper.map(manager, ResManagerToJobCreated.class);
-        ResEmployeeToJobCreated resEmployeeToJobCreated = mapper.map(employee, ResEmployeeToJobCreated.class);
+        ManagerToJobCreateDTO managerToJobCreated = mapper.map(manager, ManagerToJobCreateDTO.class);
+        EmployeeToJobsCreatedDTO employeeToJobsCreatedDTO = mapper.map(employee, EmployeeToJobsCreatedDTO.class);
 
-        resCreatedJobs.setManager(managerToJobCreated);
-        resCreatedJobs.setEmployee(resEmployeeToJobCreated);
+        createJobsDTO.setManager(managerToJobCreated);
+        createJobsDTO.setEmployee(employeeToJobsCreatedDTO);
 
-        return resCreatedJobs;
+        return createJobsDTO;
     }
 
     /**
@@ -100,7 +99,7 @@ public class JobService {
      * @param reqManagerUpdateListJobs object to update the job
      * @return Manager with updated fields
      */
-    public ResManager updateJobsListByManager(Long cnpj, Long cpf, Long id, ReqManagerUpdateListJobs reqManagerUpdateListJobs) {
+    public ManagerEmployeeCreatedDTO updateJobsListByManager(Long cnpj, Long cpf, Long id, ReqManagerUpdateListJobs reqManagerUpdateListJobs) {
         Manager manager = managerRepo.findById(cnpj)
                 .orElseThrow(() -> new ApiRequestException(HttpStatus.NOT_FOUND, "Patrão " + cnpj + " não encontrado!"));
 
@@ -139,7 +138,7 @@ public class JobService {
 
             managerRepo.save(manager);
             ModelMapper mapper = new ModelMapper();
-            return mapper.map(manager, ResManager.class);
+            return mapper.map(manager, ManagerEmployeeCreatedDTO.class);
         } else {
             throw new ApiRequestException(HttpStatus.BAD_REQUEST, "Dia de finalização tem que ser maior do que o dia de criação do trabalho");
         }

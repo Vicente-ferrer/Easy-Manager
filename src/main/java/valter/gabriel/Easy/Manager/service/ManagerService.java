@@ -9,8 +9,10 @@ import valter.gabriel.Easy.Manager.domain.dto.req.*;
 import valter.gabriel.Easy.Manager.domain.dto.res.*;
 import valter.gabriel.Easy.Manager.exception.ApiRequestException;
 import valter.gabriel.Easy.Manager.repo.ManagerRepo;
+import valter.gabriel.Easy.Manager.utility.PasswordEncoder;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -31,14 +33,14 @@ public class ManagerService {
      *                    jobs and employers because this is something done after the creation of the manager
      */
 
-    public ResManagerCreated createNewManager(ReqManager reqManager) {
+    public CreateManagerDTO createNewManager(ReqManager reqManager) {
         final boolean present = managerRepo.findById(reqManager.getCnpj()).isPresent();
 
         if (present) {
             throw new ApiRequestException(HttpStatus.BAD_REQUEST, "Usuário " + reqManager.getCnpj() + " já existente no banco de dados");
         }
 
-        if (String.valueOf(reqManager.getCnpj()).length() != 14){
+        if (String.valueOf(reqManager.getCnpj()).length() != 14) {
             throw new ApiRequestException(HttpStatus.LENGTH_REQUIRED, "O tamanho do CNPJ está incorreto, precisa ter 14 digitos");
         }
 
@@ -47,13 +49,15 @@ public class ManagerService {
         Manager manager = mapper.map(reqManager, Manager.class);
         LocalDate localDateTime = LocalDate.now();
 
-        if (reqManager.getBornDay().isAfter(localDateTime) || reqManager.getBornDay().isEqual(localDateTime)){
+        if (reqManager.getBornDay().isAfter(localDateTime) || reqManager.getBornDay().isEqual(localDateTime)) {
             throw new ApiRequestException(HttpStatus.NOT_ACCEPTABLE, " -> A data de nascimento precisa ser válida!");
         }
 
         manager.setCreationDate(localDateTime);
+        manager.setPassword(PasswordEncoder.encodePassword(manager.getPassword()));
+
         managerRepo.save(manager);
-        return mapper.map(manager, ResManagerCreated.class);
+        return mapper.map(manager, CreateManagerDTO.class);
     }
 
     /**
@@ -63,7 +67,7 @@ public class ManagerService {
      * @param reqManagerUpdate manager object to be updated
      * @return manager updated
      */
-    public ResManager updateManagerById(Long cnpj, ReqManagerUpdate reqManagerUpdate) {
+    public ManagerEmployeeCreatedDTO updateManagerById(Long cnpj, ReqManagerUpdate reqManagerUpdate) {
         Optional<Manager> managerFounded = managerRepo.findById(cnpj);
 
         if (!managerFounded.isPresent()) {
@@ -81,7 +85,7 @@ public class ManagerService {
         managerRepo.save(myManager);
 
         ModelMapper mapper = new ModelMapper();
-        return mapper.map(myManager, ResManager.class);
+        return mapper.map(myManager, ManagerEmployeeCreatedDTO.class);
     }
 
     /**
@@ -93,6 +97,43 @@ public class ManagerService {
     public Manager findManagerById(Long cnpj) {
         return managerRepo.findById(cnpj)
                 .orElseThrow(() -> new ApiRequestException(HttpStatus.NOT_FOUND, "Usuário " + cnpj + " não foi encontrado"));
+    }
+
+    /**
+     * Method used to make a simple user login
+     *
+     * @return userId
+     */
+    public LoginResponse managerLogin(LoginForm loginForm) {
+        Manager manager = managerRepo.findById(loginForm.getId())
+                .orElseThrow(() -> new ApiRequestException(HttpStatus.NOT_FOUND, "Usuário com id: " + loginForm.getId() + " não foi encontrado"));
+
+        String password = PasswordEncoder.encodePassword(loginForm.getPassword());
+        if (manager.getPassword().equals(password)) {
+            return new LoginResponse(manager.getCnpj(), "Usuário logado com sucesso!");
+        }
+
+
+        return new LoginResponse(null, "Senha não coincide, tente novamente!");
+    }
+
+    /**
+     * Method to set new password in case the manager forget
+     * @param loginForm
+     * @return message successfully
+     */
+    public String setNewPassword(LoginForm loginForm) {
+        Manager manager = managerRepo.findById(loginForm.getId())
+                .orElseThrow(() -> new ApiRequestException(HttpStatus.NOT_FOUND, "Usuário com id: " + loginForm.getId() + " não foi encontrado"));
+
+        manager.setPassword(PasswordEncoder.encodePassword(loginForm.getPassword()));
+        managerRepo.save(manager);
+        return "Senha atualizada com sucesso!";
+
+    }
+
+    public List<Manager> findAll() {
+        return managerRepo.findAll();
     }
 
     public void deleteManagerById(Long cnpj) {

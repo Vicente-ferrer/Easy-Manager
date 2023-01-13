@@ -4,6 +4,9 @@
 <!--ts-->
    * [About](#about)
    * [How to use](#how-to-use)
+   * [Endpoint's Flow](#endpoints-flow)
+   * [All application endpoints](#all-application-endpoints)
+   * [Exceptions](#exceptions)
    * [Credits](#credits)
 <!--te-->
 
@@ -11,6 +14,18 @@
 <p align="center">This repository contains an API (Application Programming Interface) developed in Java Spring that allows users to access and interact with the resources of an employee management system in a pragmatic way. The API provides a standardized interface for requests and responses between the system and users, allowing third parties to develop applications that integrate and utilize system resources quickly and efficiently.</p>
   </br>
 <h1>How to use</h1>
+<h2>Attention</h2>
+
+If you don't want to follow the step by step below, the "deploy" branch is hosted on Railway, so to use it, just use the following URL as the base URL:
+
+```
+https://easy-manager-production.up.railway.app/api/v1/
+
+```
+and then, normally follow the endpoints.
+
+
+
 <h2>Prerequisites</h2>
 <p>First, you must have the MySql database installed on your computer, which can be downloaded through this <a href="https://www.mysql.com/downloads/">link</a>.</br>
 <p>Then, <a href="https://insomnia.rest/download">download</a> Insomnia to make http requests.</br>
@@ -25,36 +40,40 @@
   <p>Change spring.username and spring.password to your google email and token.</br>
   <p>Run the app.</br>
   
-<h2>Endpoints</h2>
+<h1>Endpoint's Flow</h1>
 <p>After doing all that, let's go to the endpoints.</br>
 <h3>BASE URL</h3>
 
+for locahost
 ```bash
-http://localhost:8080/api/v1/
+http://localhost:8080/api/v1/ 
+``` 
+
+for Railway
+```bash
+https://easy-manager-production.up.railway.app/api/v1/
 ``` 
 
 To create a new manager, use:
 
 ```bash
 @POST
-employee/create-employee
+manager/sign-up
 ``` 
 with the request body
 
 ```bash
-{	
-
-"cnpj":987654321,
-"mname":"Joao Ferreira",
-"memail":"joaoferreira@hotmail.com",
-"mcompany":"Dev Cast",
-"mphone":"+5596123547895",
-"isActive":1,
-"gender":0,
-"bornDay":"2020-12-31",
-"password":"123"
-
-  }
+{
+	"cnpj":12345673901234,
+	"mname":"Akaz Ferreira",
+	"memail":"valoira08r@hotmail.com",
+	"mcompany":"Dev Cast",
+	"mphone":"+5596123547895",
+	"isActive":1,
+	"gender":0,
+	"bornDay":"2020-12-31",
+	"password":"123"
+}
 ``` 
 Where cnpj is the manager's identifier, mcompany the name of his company, gender which can be MALE and FEMALE with 0 and 1 respectively.
 Done that, wait for this answer.
@@ -253,13 +272,21 @@ the manager will receive the following email: </br></br>
 Request | Response
 :-------: | ------:
 manager/find-by-cnpj/{cnpj} | find manager by cnpj
+
 employee/find-all-by-manager/{cnpj} | return all managers employers
+
 employee/find-by-id/{cpf} | find employee by cpf
+
 job/get/all | return all jobs
+
 job/get/all-canceled | return all jobs that are canceled
+
 job/get/all-finished | return all jobs that are finished
+
 job/get/all-to-delete | return all jobs that want to delete
+
 job/get/expires-today | return all jobs that expire on the current day
+
 job/get-by-id{id} | return job by id
 ```
 
@@ -271,7 +298,9 @@ job/get-by-id{id} | return job by id
 Request | Response
 :-------: | ------:
 job/delete/{id}   | Delete the specified job
+
 employee/delete/{cpf}/from/{cnpj}   | Delete the employee of a specific manager
+
 manager/delete/{cnpj}   | Delete specific manager
 ```
 
@@ -283,7 +312,9 @@ manager/delete/{cnpj}   | Delete specific manager
 Request | Response
 :-------: | ------:
 manager/sign-up   | create a new manager
+
 email/request-delete/{cnpj}/{cpf}/{id}   | request deletion of a job by email
+
 email/request-extend-time/{cnpj}/{cpf}/{id}   | request the update of a work by email
 ```
 
@@ -293,6 +324,7 @@ email/request-extend-time/{cnpj}/{cpf}/{id}   | request the update of a work by 
 Request | Response
 :-------: | ------:
 employee/create-employee   | create a new employee
+
 create-employee   | create a new job
 ```
 
@@ -302,7 +334,9 @@ create-employee   | create a new job
 Request | Response
 :-------: | ------:
 manager/update-fields-from/{cnpj}   | update manager
+
 employee/update-from/{cnpj}/where-id/{cpf}   | update employee
+
 job/update/{id}/where-employer/{cpf}/from-manager/{cnpj}   | update job
 ```
 
@@ -311,14 +345,24 @@ job/update/{id}/where-employer/{cpf}/from-manager/{cnpj}   | update job
 ```bash
 Request | Response
 :-------: | ------:
+manager/find-all | find all managers
+
 manager/find-by-cnpj/{cnpj} | find manager by cnpj
+
 employee/find-all-by-manager/{cnpj} | return all managers employers
+
 employee/find-by-id/{cpf} | find employee by cpf
+
 job/get/all | return all jobs
+
 job/get/all-canceled | return all jobs that are canceled
+
 job/get/all-finished | return all jobs that are finished
+
 job/get/all-to-delete | return all jobs that want to delete
+
 job/get/expires-today | return all jobs that expire on the current day
+
 job/get-by-id{id} | return job by id
 ```
 
@@ -329,9 +373,29 @@ job/get-by-id{id} | return job by id
 Request | Response
 :-------: | ------:
 job/delete/{id}   | Delete the specified job
+
 employee/delete/{cpf}/from/{cnpj}   | Delete the employee of a specific manager
+
 manager/delete/{cnpj}   | Delete specific manager
 ```
+
+
+<h1>Exceptions</h1>
+
+```bash
+The CPF must have 11 digits
+
+The CNPJ must have 14 digits
+
+Birth date must be less than the current date
+
+If the manager tries to register an existing employee, an exception will be generated.
+
+The manager cannot update an employee that does not belong to him
+
+
+```
+
 
 <h1>Credits</h1>
 
