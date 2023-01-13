@@ -14,15 +14,7 @@
 <p align="center">This repository contains an API (Application Programming Interface) developed in Java Spring that allows users to access and interact with the resources of an employee management system in a pragmatic way. The API provides a standardized interface for requests and responses between the system and users, allowing third parties to develop applications that integrate and utilize system resources quickly and efficiently.</p>
   </br>
 <h1>How to use</h1>
-<h2>Attention</h2>
 
-If you don't want to follow the step by step below, the "deploy" branch is hosted on Railway, so to use it, just use the following URL as the base URL:
-
-```
-https://easy-manager-production.up.railway.app/api/v1/
-
-```
-and then, normally follow the endpoints.
 
 
 
