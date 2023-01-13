@@ -251,6 +251,29 @@ the manager will receive the following email: </br></br>
 <img src="https://user-images.githubusercontent.com/63808405/210468015-a903478e-c2d2-4ce5-979e-9f0b53afac8d.png"/></br></br>
 
 
+<h2>Login</h2>
+
+The project login was done only for teaching purposes, without any token validation, to verify projects created by me that have authentication via token, follow this <a href="https://github.com/ValterGabriell/MovieRating">link</a>:
+
+to login, use this endpoint with the following body:
+
+```bash
+
+manager/login to login manager
+or
+employee/login to login employee
+
+body
+
+{
+	"id":cpf or cnpj,
+	"password":"password"
+}
+
+
+```
+
+
 <h1>Other application endpoints</h1></br>
 
 
