@@ -5,13 +5,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import valter.gabriel.Easy.Manager.domain.Employee;
 import valter.gabriel.Easy.Manager.domain.Manager;
+import valter.gabriel.Easy.Manager.domain.dto.req.LoginForm;
 import valter.gabriel.Easy.Manager.domain.dto.req.ReqManagerEmployee;
 import valter.gabriel.Easy.Manager.domain.dto.req.ReqManagerUpdateListEmployers;
+import valter.gabriel.Easy.Manager.domain.dto.res.LoginResponse;
 import valter.gabriel.Easy.Manager.domain.dto.res.ManagerEmployeeCreatedDTO;
 import valter.gabriel.Easy.Manager.exception.ApiRequestException;
 import valter.gabriel.Easy.Manager.handle.ListHandle;
 import valter.gabriel.Easy.Manager.repo.EmployeeRepo;
 import valter.gabriel.Easy.Manager.repo.ManagerRepo;
+import valter.gabriel.Easy.Manager.utility.PasswordEncoder;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -50,6 +53,7 @@ public class EmployeeService {
                 throw new ApiRequestException(HttpStatus.LENGTH_REQUIRED, "O tamanho do CPF está incorreto, precisa ter 11 digitos!");
             }
             employee.setHireDate(localDateTime);
+            employee.setPassword(PasswordEncoder.encodePassword(employee.getPassword()));
         });
 
         List<Employee> employeeList = new ListHandle<Employee>().updateList(managerFounded.getEmployees(), reqManagerEmployee.getEmployees());
@@ -91,6 +95,41 @@ public class EmployeeService {
                 .findById(cpf)
                 .orElseThrow(() -> new ApiRequestException(HttpStatus.NOT_FOUND, " -> Usuário " + cpf + " não foi encontrado!"));
     }
+
+    /**
+     * Method used to make a simple user login
+     *
+     * @return userId
+     */
+    public LoginResponse employeeLogin(LoginForm loginForm) {
+        Employee employee = employeeRepo.findById(loginForm.getId())
+                .orElseThrow(() -> new ApiRequestException(HttpStatus.NOT_FOUND, "Usuário com id: " + loginForm.getId() + " não foi encontrado"));
+
+        String password = PasswordEncoder.encodePassword(loginForm.getPassword());
+        if (employee.getPassword().equals(password)) {
+            return new LoginResponse(employee.getCpf(), "Usuário logado com sucesso!");
+        }
+
+
+        return new LoginResponse(null, "Senha não coincide, tente novamente!");
+    }
+
+    /**
+     * Method to set new password in case the employee forget
+     * @param loginForm
+     * @return message successfully
+     */
+    public String setNewPassword(LoginForm loginForm) {
+        Employee employee = employeeRepo.findById(loginForm.getId())
+                .orElseThrow(() -> new ApiRequestException(HttpStatus.NOT_FOUND, "Usuário com id: " + loginForm.getId() + " não foi encontrado"));
+
+
+        employee.setPassword(PasswordEncoder.encodePassword(loginForm.getPassword()));
+        employeeRepo.save(employee);
+        return "Senha atualizada com sucesso!";
+
+    }
+
 
     /**
      * Method responsible for updating only the past employer of a given manager
