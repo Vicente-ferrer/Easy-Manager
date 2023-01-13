@@ -10,6 +10,8 @@ import valter.gabriel.Easy.Manager.domain.dto.res.ManagerEmployeeCreatedDTO;
 import valter.gabriel.Easy.Manager.domain.dto.res.CreateManagerDTO;
 import valter.gabriel.Easy.Manager.service.ManagerService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/manager")
 public class ManagerController {
@@ -32,6 +34,12 @@ public class ManagerController {
         Manager manager = managerService.findManagerById(cnpj);
         return new ResponseEntity<>(manager, HttpStatus.OK);
     }
+
+    @GetMapping("/find-all")
+    public ResponseEntity<List<Manager>> findAll() {
+        return new ResponseEntity<>(managerService.findAll(), HttpStatus.OK);
+    }
+
 
     @PutMapping("/update-fields-from/{cnpj}")
     public ResponseEntity<ManagerEmployeeCreatedDTO> updateManagerFieldsWithoutListEmployers(@PathVariable("cnpj") Long cnpj, @RequestBody ReqManagerUpdate reqManagerUpdate) {

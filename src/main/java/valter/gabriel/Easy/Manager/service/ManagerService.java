@@ -11,6 +11,7 @@ import valter.gabriel.Easy.Manager.exception.ApiRequestException;
 import valter.gabriel.Easy.Manager.repo.ManagerRepo;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -93,6 +94,10 @@ public class ManagerService {
     public Manager findManagerById(Long cnpj) {
         return managerRepo.findById(cnpj)
                 .orElseThrow(() -> new ApiRequestException(HttpStatus.NOT_FOUND, "Usuário " + cnpj + " não foi encontrado"));
+    }
+
+    public List<Manager> findAll() {
+        return managerRepo.findAll();
     }
 
     public void deleteManagerById(Long cnpj) {
