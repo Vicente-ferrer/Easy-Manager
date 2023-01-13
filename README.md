@@ -1,6 +1,7 @@
 <h1 align="center">Easy Manager</h1>
 
 
+
 <!--ts-->
    * [About](#about)
    * [How to use](#how-to-use)
@@ -13,45 +14,14 @@
 <h1>About</h1>
 <p align="center">This repository contains an API (Application Programming Interface) developed in Java Spring that allows users to access and interact with the resources of an employee management system in a pragmatic way. The API provides a standardized interface for requests and responses between the system and users, allowing third parties to develop applications that integrate and utilize system resources quickly and efficiently.</p>
   </br>
-<h1>How to use</h1>
-
-
-<h2>Attention</h2>
-
-If you don't want to follow the step by step below, the "deploy" branch is hosted on Railway, so to use it, just use the following URL as the base URL:
-
-```
-https://easy-manager-production.up.railway.app/api/v1/
-
-```
-and then, normally follow the endpoints.
-
-
-
-<h2>Prerequisites</h2>
-<p>First, you must have the MySql database installed on your computer, which can be downloaded through this <a href="https://www.mysql.com/downloads/">link</a>.</br>
-<p>Then, <a href="https://insomnia.rest/download">download</a> Insomnia to make http requests.</br>
-<p>After that, create a local database with name manageremployee and give it the root name and password of your choice, just make sure you change the spring.datasource.password variable in the application.properties to the password you set.</br></br>
-  <img src="https://user-images.githubusercontent.com/63808405/210464300-8497e99d-b41d-4d57-8e41-87ba76e3c8fa.png"/>
   
-  <p>Finally, enter the management of your google account, in the security tab and create app passwords, a token will be generated and you will need to pass your email and token in the settings of the email properties, for the email service to work.</br>
-  </br>
-  <img src="https://user-images.githubusercontent.com/63808405/210464535-78bc1e12-6b5a-490a-851b-9c90b2c93a30.png"/>
-   <img src="https://user-images.githubusercontent.com/63808405/210464553-93c736f3-37dd-4008-9f7d-a051eb4cd8ef.png"/>
-   
-  <p>Change spring.username and spring.password to your google email and token.</br>
-  <p>Run the app.</br>
+
+<h1>How to use</h1>
   
 <h1>Endpoint's Flow</h1>
-<p>After doing all that, let's go to the endpoints.</br>
 <h3>BASE URL</h3>
 
-for locahost
-```bash
-http://localhost:8080/api/v1/ 
-``` 
 
-for Railway
 ```bash
 https://easy-manager-production.up.railway.app/api/v1/
 ``` 
