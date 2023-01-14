@@ -342,7 +342,7 @@ manager/updatePassword   | update manager password
 
 	{
 		"id":cnpj,
-		"password":"123"
+		"password":password
 	}
 	
 	
@@ -350,7 +350,7 @@ employee/updatePassword   | update employee password
 
 	{
 		"id":cpf,
-		"password":"123"
+		"password":password
 	}
 ```
 
