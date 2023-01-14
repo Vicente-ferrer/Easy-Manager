@@ -337,6 +337,21 @@ Request | Response
 employee/create-employee   | create a new employee
 
 create-employee   | create a new job
+
+manager/updatePassword   | update manager password
+
+	{
+		"id":cnpj,
+		"password":"123"
+	}
+	
+	
+employee/updatePassword   | update employee password
+
+	{
+		"id":cpf,
+		"password":"123"
+	}
 ```
 
 <h3>PUT</h3></br>
