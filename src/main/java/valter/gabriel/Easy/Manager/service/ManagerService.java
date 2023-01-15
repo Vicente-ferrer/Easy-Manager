@@ -79,7 +79,7 @@ public class ManagerService {
         myManager.setMName(reqManagerUpdate.getMName());
         myManager.setMEmail(reqManagerUpdate.getMEmail());
         myManager.setMPhone(reqManagerUpdate.getMPhone());
-        myManager.setPassword(reqManagerUpdate.getPassword());
+        myManager.setPassword(PasswordEncoder.encodePassword(reqManagerUpdate.getPassword()));
         myManager.setMCompany(reqManagerUpdate.getMCompany());
 
         managerRepo.save(myManager);
