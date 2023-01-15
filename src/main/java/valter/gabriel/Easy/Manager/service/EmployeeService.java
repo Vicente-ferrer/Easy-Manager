@@ -163,7 +163,7 @@ public class EmployeeService {
         employee.setEEmail(reqManagerUpdateListEmployers.getEEmail());
         employee.setEPhone(reqManagerUpdateListEmployers.getEPhone());
         employee.setEName(reqManagerUpdateListEmployers.getEName());
-        employee.setPassword(reqManagerUpdateListEmployers.getPassword());
+        employee.setPassword(PasswordEncoder.encodePassword(reqManagerUpdateListEmployers.getPassword()));
 
         employee.setJobs(employeeFounded.getJobs());
 
