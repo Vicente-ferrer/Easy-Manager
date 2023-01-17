@@ -3,6 +3,8 @@ package valter.gabriel.Easy.Manager.service;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import valter.gabriel.Easy.Manager.domain.Employee;
 import valter.gabriel.Easy.Manager.domain.Jobs;
@@ -191,10 +193,14 @@ public class JobService {
         return finishDate.isAfter(creationDate);
     }
 
-
-    private String getPeriodBetweenTwoDates(LocalDate creationDate, LocalDate finishDate) {
-        grantThatFinishDateIsBiggerThanCreationDate(creationDate, finishDate);
-        Period period = Period.between(creationDate, finishDate);
-        return "Tempo de trabalho: " + period.getDays();
+    @Async
+    @Scheduled(cron = "0 5 11 * * ?")
+    private void scheduleDayVerification() {
+        jobRepo.findAll().forEach(job -> {
+            Boolean isDue = grantThatFinishDateIsBiggerThanCreationDate(LocalDate.now(), job.getFinishDay());
+            if (isDue) {
+                job.setIsCanceled(true);
+            }
+        });
     }
 }
