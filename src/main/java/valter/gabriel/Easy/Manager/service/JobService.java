@@ -3,6 +3,8 @@ package valter.gabriel.Easy.Manager.service;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import valter.gabriel.Easy.Manager.domain.Employee;
 import valter.gabriel.Easy.Manager.domain.Jobs;
@@ -20,11 +22,16 @@ import valter.gabriel.Easy.Manager.repo.JobRepo;
 import valter.gabriel.Easy.Manager.repo.ManagerRepo;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Period;
+import java.util.Date;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.stream.Collectors;
 
 @Service
+
 public class JobService {
 
     private final ManagerRepo managerRepo;
@@ -187,14 +194,18 @@ public class JobService {
 
     }
 
-    private Boolean grantThatFinishDateIsBiggerThanCreationDate(LocalDate creationDate, LocalDate finishDate) {
-        return finishDate.isAfter(creationDate);
+    private Boolean grantThatFinishDateIsBiggerThanCreationDate(LocalDate date, LocalDate finishDate) {
+        return finishDate.isAfter(date);
     }
 
-
-    private String getPeriodBetweenTwoDates(LocalDate creationDate, LocalDate finishDate) {
-        grantThatFinishDateIsBiggerThanCreationDate(creationDate, finishDate);
-        Period period = Period.between(creationDate, finishDate);
-        return "Tempo de trabalho: " + period.getDays();
+    @Async
+    @Scheduled(cron = "0 5 11 * * ?")
+    private void scheduleDayVerification() {
+        jobRepo.findAll().forEach(job -> {
+            Boolean isDue = grantThatFinishDateIsBiggerThanCreationDate(LocalDate.now(), job.getFinishDay());
+            if (isDue) {
+                job.setIsCanceled(true);
+            }
+        });
     }
 }
