@@ -23,7 +23,7 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
     public CorsConfigurationSource corsConfigurationSource() {
         final CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOriginPatterns(ImmutableList.of("*"));
-        configuration.setAllowedMethods(ImmutableList.of("*"));
+        configuration.setAllowedMethods(ImmutableList.of("GET", "PUT", "POST", "DELETE", "PATCH"));
         configuration.setAllowCredentials(true);
         configuration.setAllowedHeaders(ImmutableList.of("*"));
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
