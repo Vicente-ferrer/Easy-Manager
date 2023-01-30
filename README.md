@@ -281,7 +281,7 @@ body
 
 ```bash
 Request | Response
-:-------: | ------:
+:-------: | :------:
 manager/find-by-cnpj/{cnpj} | find manager by cnpj
 
 employee/find-all-by-manager/{cnpj} | return all managers employers
@@ -299,6 +299,8 @@ job/get/all-to-delete | return all jobs that want to delete
 job/get/expires-today | return all jobs that expire on the current day
 
 job/get-by-id{id} | return job by id
+
+job/by-employee-id/{cpf} | return job by employee cpf
 ```
 
 
