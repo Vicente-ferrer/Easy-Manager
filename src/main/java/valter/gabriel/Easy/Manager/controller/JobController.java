@@ -43,8 +43,8 @@ public class JobController {
         return new ResponseEntity<>(jobService.getAllJobs(), HttpStatus.OK);
     }
 
-    @GetMapping("/get/by-employee-id")
-    public ResponseEntity<List<Jobs>> getByEmployeeId(Long employeeCpf) {
+    @GetMapping("/get/by-employee-id/{cpf}")
+    public ResponseEntity<List<Jobs>> getByEmployeeId(@PathVariable("cpf") Long employeeCpf) {
         return new ResponseEntity<>(jobService.getJobsByEmployeeId(employeeCpf), HttpStatus.OK);
     }
 
