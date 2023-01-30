@@ -34,42 +34,47 @@ public class JobController {
 
     @PutMapping("/update/{id}/where-employer/{cpf}/from-manager/{cnpj}")
     public ResponseEntity<ManagerEmployeeCreatedDTO> updateJob(@PathVariable("id") Long id, @PathVariable("cpf") Long cpf, @PathVariable("cnpj") Long cnpj, @RequestBody ReqManagerUpdateListJobs reqManagerUpdateListJobs) {
-        ManagerEmployeeCreatedDTO manager = jobService.updateJobsListByManager(cnpj, cpf,id, reqManagerUpdateListJobs);
+        ManagerEmployeeCreatedDTO manager = jobService.updateJobsListByManager(cnpj, cpf, id, reqManagerUpdateListJobs);
         return new ResponseEntity<>(manager, HttpStatus.OK);
     }
 
     @GetMapping("/get/all")
-    public ResponseEntity<List<Jobs>> getAllJobs(){
+    public ResponseEntity<List<Jobs>> getAllJobs() {
         return new ResponseEntity<>(jobService.getAllJobs(), HttpStatus.OK);
     }
 
+    @GetMapping("/get/by-employee-id")
+    public ResponseEntity<List<Jobs>> getByEmployeeId(Long employeeCpf) {
+        return new ResponseEntity<>(jobService.getJobsByEmployeeId(employeeCpf), HttpStatus.OK);
+    }
+
     @GetMapping("/get/all-canceled")
-    public ResponseEntity<List<Jobs>> getAllJobsCanceled(){
+    public ResponseEntity<List<Jobs>> getAllJobsCanceled() {
         return new ResponseEntity<>(jobService.getAllJobsCanceled(), HttpStatus.OK);
     }
 
     @GetMapping("/get/all-finished")
-    public ResponseEntity<List<Jobs>> getAllJobsFinished(){
+    public ResponseEntity<List<Jobs>> getAllJobsFinished() {
         return new ResponseEntity<>(jobService.getAllJobsFinished(), HttpStatus.OK);
     }
 
     @GetMapping("/get/all-to-delete")
-    public ResponseEntity<List<Jobs>> getAllJobsDelete(){
+    public ResponseEntity<List<Jobs>> getAllJobsDelete() {
         return new ResponseEntity<>(jobService.getAllJobsDelete(), HttpStatus.OK);
     }
 
     @GetMapping("/get/expires-today")
-    public ResponseEntity<List<Jobs>> getJobsThatExpiresOnCurrentDay(){
+    public ResponseEntity<List<Jobs>> getJobsThatExpiresOnCurrentDay() {
         return new ResponseEntity<>(jobService.getJobsThatExpiresOnCurrentDay(), HttpStatus.OK);
     }
 
     @GetMapping("/get-by-id/{id}")
-    public ResponseEntity<Jobs> getJobById(@PathVariable("id")Long id){
+    public ResponseEntity<Jobs> getJobById(@PathVariable("id") Long id) {
         return new ResponseEntity<>(jobService.getJobById(id), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteManagerByCnpj(@PathVariable("id")Long id){
+    public ResponseEntity<?> deleteManagerByCnpj(@PathVariable("id") Long id) {
         jobService.deleteJob(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

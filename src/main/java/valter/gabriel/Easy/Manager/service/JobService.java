@@ -173,6 +173,11 @@ public class JobService {
                 .collect(Collectors.toList());
     }
 
+    public List<Jobs> getJobsByEmployeeId(Long employeeCpf) {
+        Employee employee = employeeRepo.findById(employeeCpf).orElseThrow(() -> new ApiRequestException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
+        return employee.getJobs();
+    }
+
     public List<Jobs> getAllJobs() {
         return jobRepo.findAll();
     }
