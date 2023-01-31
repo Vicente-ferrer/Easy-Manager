@@ -40,7 +40,7 @@ public class EmployeeController {
     }
 
 
-    @PatchMapping("/create-employee")
+    @PutMapping("/create-employee")
     public ResponseEntity<ManagerEmployeeCreatedDTO> createNewEmployer(@RequestBody ReqManagerEmployee reqManagerEmployee) {
         ManagerEmployeeCreatedDTO newEmployeeByManager = employeeService.createNewEmployeeByManager(reqManagerEmployee);
         return new ResponseEntity<>(newEmployeeByManager, HttpStatus.CREATED);
