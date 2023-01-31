@@ -71,7 +71,7 @@ Done that, wait for this answer.
   After that, we can create an employee for our manager, so use the method:
   
 ```bash
-@PATCH
+@PUT
 employee/create-employee
 ``` 
 
@@ -336,9 +336,9 @@ email/request-extend-time/{cnpj}/{cpf}/{id}   | request the update of a work by 
 ```bash
 Request | Response
 :-------: | ------:
-employee/create-employee   | create a new employee
 
-create-employee   | create a new job
+
+job/create   | create a new job
 
 manager/updatePassword   | update manager password
 
@@ -361,6 +361,9 @@ employee/updatePassword   | update employee password
 ```bash
 Request | Response
 :-------: | ------:
+
+employee/create-employee   | create a new employee
+
 manager/update-fields-from/{cnpj}   | update manager
 
 employee/update-from/{cnpj}/where-id/{cpf}   | update employee
