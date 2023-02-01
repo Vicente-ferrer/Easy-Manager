@@ -71,7 +71,7 @@ Done that, wait for this answer.
   After that, we can create an employee for our manager, so use the method:
   
 ```bash
-@PATCH
+@PUT
 employee/create-employee
 ``` 
 
@@ -105,7 +105,7 @@ Done that, wait for this answer.
  After that, we will create jobs for our employee!
 
 ```bash
-@PATCH
+@PUT
 /job/create
 ``` 
 
@@ -329,16 +329,29 @@ manager/sign-up   | create a new manager
 email/request-delete/{cnpj}/{cpf}/{id}   | request deletion of a job by email
 
 email/request-extend-time/{cnpj}/{cpf}/{id}   | request the update of a work by email
+
+employee/login | login employee and return data
+
+manager/login | login manager and return manager id
+
 ```
 
-<h3>PATCH</h3></br>
+
+<h3>PUT</h3></br>
 
 ```bash
 Request | Response
 :-------: | ------:
+
 employee/create-employee   | create a new employee
 
-create-employee   | create a new job
+manager/update-fields-from/{cnpj}   | update manager
+
+employee/update-from/{cnpj}/where-id/{cpf}   | update employee
+
+job/update/{id}/where-employer/{cpf}/from-manager/{cnpj}   | update job
+
+job/create   | create a new job
 
 manager/updatePassword   | update manager password
 
@@ -354,18 +367,10 @@ employee/updatePassword   | update employee password
 		"id":cpf,
 		"password":password
 	}
-```
 
-<h3>PUT</h3></br>
 
-```bash
-Request | Response
-:-------: | ------:
-manager/update-fields-from/{cnpj}   | update manager
 
-employee/update-from/{cnpj}/where-id/{cpf}   | update employee
 
-job/update/{id}/where-employer/{cpf}/from-manager/{cnpj}   | update job
 ```
 
 <h3>GET</h3></br>
