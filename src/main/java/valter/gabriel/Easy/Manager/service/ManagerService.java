@@ -55,6 +55,7 @@ public class ManagerService {
 
         manager.setCreationDate(localDateTime);
         manager.setPassword(PasswordEncoder.encodePassword(manager.getPassword()));
+        manager.setIsActive(1);
 
         managerRepo.save(manager);
         return mapper.map(manager, CreateManagerDTO.class);

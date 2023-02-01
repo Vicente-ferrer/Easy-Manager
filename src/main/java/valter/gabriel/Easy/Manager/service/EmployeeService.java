@@ -9,6 +9,7 @@ import valter.gabriel.Easy.Manager.domain.dto.req.LoginForm;
 import valter.gabriel.Easy.Manager.domain.dto.req.ReqManagerEmployee;
 import valter.gabriel.Easy.Manager.domain.dto.req.ReqManagerUpdateListEmployers;
 import valter.gabriel.Easy.Manager.domain.dto.res.LoginResponse;
+import valter.gabriel.Easy.Manager.domain.dto.res.LoginResponseEmployee;
 import valter.gabriel.Easy.Manager.domain.dto.res.ManagerEmployeeCreatedDTO;
 import valter.gabriel.Easy.Manager.exception.ApiRequestException;
 import valter.gabriel.Easy.Manager.handle.ListHandle;
@@ -24,6 +25,7 @@ public class EmployeeService {
 
     private final ManagerRepo managerRepo;
     private final EmployeeRepo employeeRepo;
+    private Long cnpj = 0L;
 
     public EmployeeService(ManagerRepo managerRepo, EmployeeRepo employeeRepo) {
         this.managerRepo = managerRepo;
@@ -54,6 +56,7 @@ public class EmployeeService {
             }
             employee.setHireDate(localDateTime);
             employee.setPassword(PasswordEncoder.encodePassword(employee.getPassword()));
+            employee.setIsActive(1);
         });
 
         List<Employee> employeeList = new ListHandle<Employee>().updateList(managerFounded.getEmployees(), reqManagerEmployee.getEmployees());
@@ -99,23 +102,31 @@ public class EmployeeService {
     /**
      * Method used to make a simple user login
      *
-     * @return userId
+     * @return LoginResponseEmployee
      */
-    public LoginResponse employeeLogin(LoginForm loginForm) {
+    public LoginResponseEmployee employeeLogin(LoginForm loginForm) {
         Employee employee = employeeRepo.findById(loginForm.getId())
                 .orElseThrow(() -> new ApiRequestException(HttpStatus.NOT_FOUND, "Usuário com id: " + loginForm.getId() + " não foi encontrado"));
 
+        List<Manager> managers = managerRepo.findAll();
+        managers.forEach(manager -> {
+            boolean isEquals = manager.getEmployees().stream().anyMatch(_employee -> _employee.getCpf().equals(employee.getCpf()));
+            if (isEquals) {
+                cnpj = manager.getCnpj();
+            }
+        });
+
         String password = PasswordEncoder.encodePassword(loginForm.getPassword());
         if (employee.getPassword().equals(password)) {
-            return new LoginResponse(employee.getCpf(), "Usuário logado com sucesso!");
+            return new LoginResponseEmployee("Usuário logado com sucesso!", employee, cnpj);
         }
 
-
-        return new LoginResponse(null, "Senha não coincide, tente novamente!");
+        return new LoginResponseEmployee("Senha não coincide, tente novamente!", null, null);
     }
 
     /**
      * Method to set new password in case the employee forget
+     *
      * @param loginForm
      * @return message successfully
      */

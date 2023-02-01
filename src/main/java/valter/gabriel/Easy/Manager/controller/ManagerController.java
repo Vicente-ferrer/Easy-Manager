@@ -36,7 +36,7 @@ public class ManagerController {
         return new ResponseEntity<>(loginResponse, HttpStatus.OK);
     }
 
-    @PatchMapping("/updatePassword")
+    @PutMapping("/updatePassword")
     public ResponseEntity<String> updatePassword(@RequestBody LoginForm loginForm) {
         String str = managerService.setNewPassword(loginForm);
         return new ResponseEntity<>(str, HttpStatus.OK);

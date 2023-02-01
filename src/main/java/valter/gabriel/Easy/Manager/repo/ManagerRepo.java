@@ -13,4 +13,5 @@ public interface ManagerRepo extends JpaRepository<Manager, Long> {
     List<Employee> findAllEmployeeByManager(Long cnpj);
 
 
+
 }

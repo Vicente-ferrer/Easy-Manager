@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import valter.gabriel.Easy.Manager.domain.Employee;
 import valter.gabriel.Easy.Manager.domain.dto.req.*;
 import valter.gabriel.Easy.Manager.domain.dto.res.LoginResponse;
+import valter.gabriel.Easy.Manager.domain.dto.res.LoginResponseEmployee;
 import valter.gabriel.Easy.Manager.domain.dto.res.ManagerEmployeeCreatedDTO;
 import valter.gabriel.Easy.Manager.service.EmployeeService;
 
@@ -28,12 +29,12 @@ public class EmployeeController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> loginManager(@RequestBody LoginForm loginForm) {
-        LoginResponse loginResponse = employeeService.employeeLogin(loginForm);
+    public ResponseEntity<LoginResponseEmployee> loginEmployee(@RequestBody LoginForm loginForm) {
+        LoginResponseEmployee loginResponse = employeeService.employeeLogin(loginForm);
         return new ResponseEntity<>(loginResponse, HttpStatus.OK);
     }
 
-    @PatchMapping("/updatePassword")
+    @PutMapping("/updatePassword")
     public ResponseEntity<String> updatePassword(@RequestBody LoginForm loginForm) {
         String str = employeeService.setNewPassword(loginForm);
         return new ResponseEntity<>(str, HttpStatus.OK);
