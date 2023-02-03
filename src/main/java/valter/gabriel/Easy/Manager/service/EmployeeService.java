@@ -1,6 +1,7 @@
 package valter.gabriel.Easy.Manager.service;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import valter.gabriel.Easy.Manager.domain.Employee;
@@ -8,13 +9,13 @@ import valter.gabriel.Easy.Manager.domain.Manager;
 import valter.gabriel.Easy.Manager.domain.dto.req.LoginForm;
 import valter.gabriel.Easy.Manager.domain.dto.req.ReqManagerEmployee;
 import valter.gabriel.Easy.Manager.domain.dto.req.ReqManagerUpdateListEmployers;
-import valter.gabriel.Easy.Manager.domain.dto.res.LoginResponse;
 import valter.gabriel.Easy.Manager.domain.dto.res.LoginResponseEmployee;
 import valter.gabriel.Easy.Manager.domain.dto.res.ManagerEmployeeCreatedDTO;
 import valter.gabriel.Easy.Manager.exception.ApiRequestException;
 import valter.gabriel.Easy.Manager.handle.ListHandle;
 import valter.gabriel.Easy.Manager.repo.EmployeeRepo;
 import valter.gabriel.Easy.Manager.repo.ManagerRepo;
+import valter.gabriel.Easy.Manager.utility.IdLenghtValidation;
 import valter.gabriel.Easy.Manager.utility.PasswordEncoder;
 
 import java.time.LocalDate;
@@ -26,10 +27,13 @@ public class EmployeeService {
     private final ManagerRepo managerRepo;
     private final EmployeeRepo employeeRepo;
     private Long cnpj = 0L;
+    private IdLenghtValidation idLenghtValidation;
 
-    public EmployeeService(ManagerRepo managerRepo, EmployeeRepo employeeRepo) {
+    @Autowired
+    public EmployeeService(ManagerRepo managerRepo, EmployeeRepo employeeRepo, IdLenghtValidation idLenghtValidation) {
         this.managerRepo = managerRepo;
         this.employeeRepo = employeeRepo;
+        this.idLenghtValidation = idLenghtValidation;
     }
 
     /**
@@ -51,12 +55,17 @@ public class EmployeeService {
                     throw new ApiRequestException(HttpStatus.CONFLICT, " -> Funcionário " + employee.getCpf() + " já está cadastrado para este patrão.");
                 }
             });
-            if (String.valueOf(employee.getCpf()).length() != 11) {
+
+            if (idLenghtValidation.test(employee.getCpf())) {
+                if (idLenghtValidation.isCPFId(employee.getCpf())) {
+                    employee.setHireDate(localDateTime);
+                    employee.setPassword(PasswordEncoder.encodePassword(employee.getPassword()));
+                    employee.setIsActive(1);
+                }else{
+                    throw new ApiRequestException(HttpStatus.LENGTH_REQUIRED, "O tamanho do CPF está incorreto ou você deseja cadastrar um manager!");
+                }
                 throw new ApiRequestException(HttpStatus.LENGTH_REQUIRED, "O tamanho do CPF está incorreto, precisa ter 11 digitos!");
             }
-            employee.setHireDate(localDateTime);
-            employee.setPassword(PasswordEncoder.encodePassword(employee.getPassword()));
-            employee.setIsActive(1);
         });
 
         List<Employee> employeeList = new ListHandle<Employee>().updateList(managerFounded.getEmployees(), reqManagerEmployee.getEmployees());

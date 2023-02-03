@@ -9,6 +9,7 @@ import valter.gabriel.Easy.Manager.domain.dto.req.*;
 import valter.gabriel.Easy.Manager.domain.dto.res.*;
 import valter.gabriel.Easy.Manager.exception.ApiRequestException;
 import valter.gabriel.Easy.Manager.repo.ManagerRepo;
+import valter.gabriel.Easy.Manager.utility.IdLenghtValidation;
 import valter.gabriel.Easy.Manager.utility.PasswordEncoder;
 
 import java.time.LocalDate;
@@ -18,11 +19,13 @@ import java.util.Optional;
 @Service
 public class ManagerService {
     private final ManagerRepo managerRepo;
+    private IdLenghtValidation idLenghtValidation;
 
 
     @Autowired
-    public ManagerService(ManagerRepo managerRepo) {
+    public ManagerService(ManagerRepo managerRepo, IdLenghtValidation idLenghtValidation) {
         this.managerRepo = managerRepo;
+        this.idLenghtValidation = idLenghtValidation;
     }
 
     /**
@@ -40,24 +43,28 @@ public class ManagerService {
             throw new ApiRequestException(HttpStatus.BAD_REQUEST, "Usuário " + reqManager.getCnpj() + " já existente no banco de dados");
         }
 
-        if (String.valueOf(reqManager.getCnpj()).length() != 14) {
-            throw new ApiRequestException(HttpStatus.LENGTH_REQUIRED, "O tamanho do CNPJ está incorreto, precisa ter 14 digitos");
-        }
 
 
         ModelMapper mapper = new ModelMapper();
         Manager manager = mapper.map(reqManager, Manager.class);
-        LocalDate localDateTime = LocalDate.now();
 
-        if (reqManager.getBornDay().isAfter(localDateTime) || reqManager.getBornDay().isEqual(localDateTime)) {
-            throw new ApiRequestException(HttpStatus.NOT_ACCEPTABLE, " -> A data de nascimento precisa ser válida!");
+        if (idLenghtValidation.test(reqManager.getCnpj())){
+            if (idLenghtValidation.isCNPJId(reqManager.getCnpj())){
+                LocalDate localDateTime = LocalDate.now();
+
+                if (reqManager.getBornDay().isAfter(localDateTime) || reqManager.getBornDay().isEqual(localDateTime)) {
+                    throw new ApiRequestException(HttpStatus.NOT_ACCEPTABLE, " -> A data de nascimento precisa ser válida!");
+                }
+
+                manager.setCreationDate(localDateTime);
+                manager.setPassword(PasswordEncoder.encodePassword(manager.getPassword()));
+                manager.setIsActive(1);
+
+                managerRepo.save(manager);
+            }
+            throw new ApiRequestException(HttpStatus.LENGTH_REQUIRED, "O tamanho do CNPJ está incorreto, precisa ter 14 digitos");
         }
 
-        manager.setCreationDate(localDateTime);
-        manager.setPassword(PasswordEncoder.encodePassword(manager.getPassword()));
-        manager.setIsActive(1);
-
-        managerRepo.save(manager);
         return mapper.map(manager, CreateManagerDTO.class);
     }
 
