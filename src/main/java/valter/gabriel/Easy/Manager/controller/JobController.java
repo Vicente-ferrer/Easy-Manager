@@ -26,7 +26,7 @@ public class JobController {
     }
 
 
-    @PatchMapping("/create")
+    @PutMapping("/create")
     public ResponseEntity<CreateJobsDTO> createNewJob(@RequestBody OrderJob orderJob) {
         CreateJobsDTO createJobsDTO = jobService.createNewJob(orderJob);
         return new ResponseEntity<>(createJobsDTO, HttpStatus.CREATED);
